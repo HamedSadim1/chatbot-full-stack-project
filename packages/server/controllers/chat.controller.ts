@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 import { chatService } from "../services/chat.service";
-import { conversationRepository } from "../repositories/conversation.repository";
 import z from "zod";
 
 const chatSchema = z.object({
@@ -24,8 +23,7 @@ export const chatController = {
       const { prompt, conversationId } = parseResult.data;
       const response = await chatService.sendMessage(prompt, conversationId);
 
-      conversationRepository.setLastResponseId(conversationId, response.id);
-      res.json({ message: response.message, responseId: response.id });
+      res.json({ message: response.message });
     } catch (error) {
       console.error("Error:", error);
       res.status(500).json({ error: "Internal Server Error" });

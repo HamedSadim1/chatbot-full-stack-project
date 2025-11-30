@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useRef, useState } from "react";
+import { Bot, Sparkles, Wifi } from "lucide-react";
 import ChatInput, { type ChatFormData } from "./ChatInput";
 import type { Message } from "./ChatMessages";
 import ChatMessages from "./ChatMessages";
@@ -24,6 +25,10 @@ const ChatBot = () => {
   const [error, setError] = useState<string>("");
 
   const conversationId = useRef(crypto.randomUUID()).current;
+  const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(
+    /\/$/,
+    ""
+  );
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
     try {
@@ -33,7 +38,7 @@ const ChatBot = () => {
       setError("");
       popAudio.play();
 
-      const { data } = await axios.post<ChatResponse>("/api/chat", {
+      const { data } = await axios.post<ChatResponse>(`${API_BASE_URL}/chat`, {
         prompt,
         conversationId,
       });
@@ -51,14 +56,59 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex flex-col flex-1 gap-3 mb-10 overflow-y-auto ">
-        <ChatMessages messages={messages} />
+    <div className="flex min-h-[600px] flex-col gap-6 text-white">
+      <header className="glass-panel rounded-[32px] border border-white/10 px-5 py-6 sm:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+              WonderChat
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
+                <Bot className="size-5 text-cyan-200" />
+              </span>
+              <div>
+                <h1 className="text-2xl font-semibold leading-tight text-glow">
+                  Altijd klaar om te helpen
+                </h1>
+                <p className="text-sm text-white/70">
+                  Vraag me alles en ik antwoord met flair.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 rounded-3xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
+            <div className="flex flex-col text-right text-xs text-white/70">
+              <span className="font-semibold text-white">Live status</span>
+              <span>Realtime verbinding actief</span>
+            </div>
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-400/30">
+              <Wifi className="size-4 text-emerald-200" />
+            </span>
+          </div>
+        </div>
+      </header>
 
-        {isAssistantTyping && <TypingIndicator />}
-        {error && <div className="text-red-600 ">{error}</div>}
-      </div>
-      <ChatInput onSubmit={onSubmit} />
+      <section className="glass-panel flex flex-1 flex-col gap-4 rounded-[32px] border border-white/10 p-4 sm:p-6">
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto pr-2 frosted-scrollbar">
+          <ChatMessages messages={messages} />
+
+          {isAssistantTyping && <TypingIndicator />}
+          {error && (
+            <div className="rounded-2xl border border-red-400/40 bg-red-500/20 px-4 py-3 text-sm text-red-50">
+              {error}
+            </div>
+          )}
+        </div>
+        <div className="pt-1">
+          <ChatInput onSubmit={onSubmit} />
+          <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
+            <Sparkles className="size-3.5 text-cyan-200" />
+            WonderWord gebruikt contextuele prompts voor persoonlijkere
+            antwoorden.
+          </p>
+        </div>
+      </section>
     </div>
   );
 };
