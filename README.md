@@ -1,5 +1,7 @@
 # WonderChat (Full Stack)
 
+![Screenshot](public/screenshot.png)
+
 AI-powered WonderWorld assistant built with a Vite + React client and an Express + Bun server that talks to a local [Ollama](https://ollama.com) model. The UI embraces glassmorphism, typing audio, markdown messages, a navbar, and footer crediting **Hamed Sadim**.
 
 ## Table of contents
