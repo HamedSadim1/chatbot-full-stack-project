@@ -1,3 +1,4 @@
 {
-  "*.{js,jsx,ts,tsx,css}": "bunx prettier --write"
+  "*.{js,jsx,ts,tsx,css}": "bunx prettier --write",
+  "packages/client/**/*.{ts,tsx}": "bunx eslint --fix --config packages/client/eslint.config.js --no-error-on-unmatched-pattern"
 }
