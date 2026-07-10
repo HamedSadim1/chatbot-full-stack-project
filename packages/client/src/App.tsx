@@ -1,6 +1,5 @@
-import ChatBot from "./components/chat/ChatBot";
-import { BotAvatar } from "./components/ui/BotAvatar";
-import { ExternalLink } from "./components/ui/ExternalLink";
+import { ChatBot } from "./components/chat";
+import { BotAvatar, ExternalLink } from "./components/ui";
 import { ExternalLink as ExternalLinkIcon, MessageCircle } from "lucide-react";
 import { NAV_LINKS, SITE } from "./lib/constants";
 import { NL } from "./lib/locales/nl";

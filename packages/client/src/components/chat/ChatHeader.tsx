@@ -1,4 +1,4 @@
-import { BotAvatar } from "@/components/ui/BotAvatar";
+import { BotAvatar } from "@/components/ui";
 import { SITE } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
 import type { ConnectionStatus } from "@/types/chat";

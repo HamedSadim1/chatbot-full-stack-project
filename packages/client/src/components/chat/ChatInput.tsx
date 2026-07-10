@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ArrowUp, Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
-import { Button } from "../ui/Button";
+import { Button } from "../ui";
 import { CHAT, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
 import type { ChatFormData } from "@/types/chat";

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Check, Copy, User } from "lucide-react";
-import { BotAvatar } from "@/components/ui/BotAvatar";
+import { BotAvatar } from "@/components/ui";
 import { APP, SITE, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
 import type { Message } from "@/types/chat";
