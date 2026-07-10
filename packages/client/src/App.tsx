@@ -3,6 +3,7 @@ import { BotAvatar } from "./components/ui/BotAvatar";
 import { ExternalLink } from "./components/ui/ExternalLink";
 import { ExternalLink as ExternalLinkIcon, MessageCircle } from "lucide-react";
 import { NAV_LINKS, SITE } from "./lib/constants";
+import { NL } from "./lib/locales/nl";
 
 function App() {
   return (
@@ -35,19 +36,19 @@ function App() {
               href={SITE.portfolioUrl}
               className="rounded-full border border-white/20 px-4 py-1.5 text-white transition hover:border-white/60 hover:bg-white/5"
             >
-              Portfolio
+              {NL.app.portfolioLabel}
             </ExternalLink>
           </div>
           <div className="flex items-center justify-between text-sm text-white/70 sm:hidden">
             <span className="flex items-center gap-2">
               <MessageCircle className="size-4" />
-              Chat &amp; AI assistent
+              {NL.app.tagline}
             </span>
             <ExternalLink
               href={SITE.portfolioUrl}
               className="rounded-full border border-white/20 px-3 py-1 text-white transition hover:border-white/60"
             >
-              Portfolio
+              {NL.app.portfolioLabel}
             </ExternalLink>
           </div>
         </nav>
@@ -56,7 +57,7 @@ function App() {
 
         <footer className="glass-panel mt-auto rounded-3xl border border-white/10 px-4 py-4 text-sm text-white/70 sm:flex sm:items-center sm:justify-between">
           <p>
-            Gemaakt door{" "}
+            {NL.app.madeBy}{" "}
             <span className="font-semibold text-white">{SITE.author}</span>
           </p>
           <div className="mt-2 flex items-center gap-4 sm:mt-0">
@@ -69,10 +70,10 @@ function App() {
             <ExternalLink
               href={SITE.githubUrl}
               className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
-              aria-label="GitHub"
+              aria-label={NL.app.githubLabel}
             >
               <ExternalLinkIcon className="size-3.5" />
-              GitHub
+              {NL.app.githubLabel}
             </ExternalLink>
           </div>
         </footer>

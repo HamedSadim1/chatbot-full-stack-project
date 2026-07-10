@@ -28,6 +28,18 @@ export const CHAT = {
   ],
 } as const;
 
+export const TIMING = {
+  healthCheckTimeout: 5000,
+  healthCheckInterval: 30000,
+  copiedFeedbackDuration: 2000,
+  textareaMaxHeight: 160,
+  characterWarningThreshold: 0.9,
+} as const;
+
+export const APP = {
+  locale: "nl-NL",
+} as const;
+
 export const AUDIO = {
   popVolume: 0.2,
   notificationVolume: 0.2,

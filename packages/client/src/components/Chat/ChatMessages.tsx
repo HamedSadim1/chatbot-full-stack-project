@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Check, Copy, User } from "lucide-react";
 import { BotAvatar } from "@/components/ui/BotAvatar";
-import { SITE } from "@/lib/constants";
+import { APP, SITE, TIMING } from "@/lib/constants";
+import { NL } from "@/lib/locales/nl";
 import type { Message } from "@/types/chat";
 
 interface ChatMessagesProps {
@@ -11,7 +12,7 @@ interface ChatMessagesProps {
 
 const formatTime = (date?: Date) => {
   if (!date) return "";
-  return new Intl.DateTimeFormat("nl-NL", {
+  return new Intl.DateTimeFormat(APP.locale, {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
@@ -25,7 +26,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 2000);
+      setTimeout(() => setCopiedIndex(null), TIMING.copiedFeedbackDuration);
     } catch (error) {
       console.error("Failed to copy text:", error);
     }
@@ -43,11 +44,10 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
         <BotAvatar size="lg" className="backdrop-blur" />
         <div className="max-w-md space-y-2">
           <h2 className="text-xl font-semibold text-white">
-            Welkom bij {SITE.name}
+            {NL.chat.welcomeTitle} {SITE.name}
           </h2>
           <p className="text-sm leading-relaxed text-white/60">
-            Stel een vraag of deel een idee. Ik ben hier om je te helpen met
-            heldere, persoonlijke antwoorden.
+            {NL.chat.welcomeDescription}
           </p>
         </div>
       </div>
@@ -81,7 +81,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
             >
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-medium uppercase tracking-wider text-white/60">
-                  {isUser ? "Jij" : SITE.botName}
+                  {isUser ? NL.chat.userLabel : SITE.botName}
                 </span>
                 <span className="text-[10px] text-white/40">
                   {formatTime(msg.timestamp)}
@@ -105,8 +105,8 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                     type="button"
                     onClick={() => handleCopy(msg.content, index)}
                     className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 text-white/70 opacity-0 shadow-lg backdrop-blur transition hover:bg-slate-800 hover:text-white group-hover:opacity-100"
-                    aria-label="Kopieer bericht"
-                    title="Kopieer bericht"
+                    aria-label={NL.chat.copyLabel}
+                    title={NL.chat.copyLabel}
                   >
                     {copiedIndex === index ? (
                       <Check className="size-3.5 text-emerald-400" />

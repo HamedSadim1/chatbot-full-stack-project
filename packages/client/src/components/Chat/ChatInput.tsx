@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 import { ArrowUp, Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "../ui/button";
-import { CHAT } from "@/lib/constants";
+import { CHAT, TIMING } from "@/lib/constants";
+import { NL } from "@/lib/locales/nl";
 import type { ChatFormData } from "@/types/chat";
 
 type Props = {
@@ -29,17 +30,17 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
   const characterCount = promptValue.length;
 
   const { ref, ...rest } = register("prompt", {
-    required: "Typ eerst een bericht.",
+    required: NL.validation.required,
     minLength: {
       value: CHAT.minLength,
-      message: `Bericht moet minimaal ${CHAT.minLength} tekens bevatten.`,
+      message: NL.validation.minLength(CHAT.minLength),
     },
     maxLength: {
       value: CHAT.maxLength,
-      message: `Bericht mag maximaal ${CHAT.maxLength} tekens bevatten.`,
+      message: NL.validation.maxLength(CHAT.maxLength),
     },
     validate: (value) =>
-      value.trim().length > 0 || "Bericht mag niet alleen spaties bevatten.",
+      value.trim().length > 0 || NL.validation.notOnlyWhitespace,
   });
 
   const handleFormSubmit = handleSubmit(async (data: ChatFormData) => {
@@ -59,7 +60,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
     textarea.style.height = "auto";
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
+    textarea.style.height = `${Math.min(textarea.scrollHeight, TIMING.textareaMaxHeight)}px`;
   }, [promptValue]);
 
   const isValid =
@@ -72,7 +73,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
       onSubmit={handleFormSubmit}
       onKeyDown={handleKeyDown}
       className="group relative flex flex-col gap-2 rounded-28 border border-white/10 bg-white/5 px-4 py-3 shadow-lg backdrop-blur-2xl transition focus-within:border-cyan-400/50 focus-within:bg-white/8 focus-within:shadow-[0_0_40px_rgba(14,165,233,0.2)]"
-      aria-label="Chat invoer"
+      aria-label={NL.chat.inputAriaLabel}
     >
       <textarea
         {...rest}
@@ -81,7 +82,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
           textareaRef.current = element;
         }}
         className="w-full resize-none border-0 bg-transparent text-base leading-relaxed text-white placeholder-white/50 focus:outline-none focus:ring-0 disabled:opacity-60"
-        placeholder="Vertel me je idee of vraag..."
+        placeholder={NL.chat.placeholder}
         maxLength={CHAT.maxLength}
         minLength={CHAT.minLength}
         autoFocus
@@ -103,7 +104,8 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
           ) : (
             <span
               className={`text-xs transition-colors ${
-                characterCount >= CHAT.maxLength * 0.9
+                characterCount >=
+                CHAT.maxLength * TIMING.characterWarningThreshold
                   ? "text-amber-300"
                   : "text-white/40"
               }`}
@@ -116,7 +118,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
         <Button
           type="submit"
           disabled={!isValid}
-          aria-label="Verstuur bericht"
+          aria-label={NL.chat.sendAriaLabel}
           className="h-10 w-10 rounded-full bg-linear-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_10px_30px_rgba(14,165,233,0.45)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_rgba(14,165,233,0.55)] disabled:opacity-40 disabled:hover:scale-100"
         >
           {isLoading ? (

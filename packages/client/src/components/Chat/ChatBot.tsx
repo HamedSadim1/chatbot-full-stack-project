@@ -6,7 +6,8 @@ import TypingIndicator from "./TypingIndicator";
 import { BotAvatar } from "@/components/ui/BotAvatar";
 import { playAudioSafe, popAudio, notificationAudio } from "@/lib/audio";
 import { apiClient } from "@/lib/api";
-import { API, CHAT, SITE } from "@/lib/constants";
+import { API, CHAT, SITE, TIMING } from "@/lib/constants";
+import { NL } from "@/lib/locales/nl";
 import type {
   ChatFormData,
   ChatResponse,
@@ -30,7 +31,9 @@ const ChatBot = () => {
 
     const checkConnection = async () => {
       try {
-        await apiClient.get(API.healthEndpoint, { timeout: 5000 });
+        await apiClient.get(API.healthEndpoint, {
+          timeout: TIMING.healthCheckTimeout,
+        });
         if (!cancelled) setConnectionStatus("online");
       } catch {
         if (!cancelled) setConnectionStatus("offline");
@@ -38,7 +41,7 @@ const ChatBot = () => {
     };
 
     void checkConnection();
-    const interval = setInterval(checkConnection, 30000);
+    const interval = setInterval(checkConnection, TIMING.healthCheckInterval);
     return () => {
       cancelled = true;
       clearInterval(interval);
@@ -66,7 +69,7 @@ const ChatBot = () => {
       playAudioSafe(notificationAudio);
     } catch (error) {
       console.error(error);
-      setError("Er is een fout opgetreden. Probeer het later opnieuw.");
+      setError(NL.chat.errorMessage);
     } finally {
       setIsAssistantTyping(false);
     }
@@ -91,22 +94,22 @@ const ChatBot = () => {
       icon: Wifi,
       color: "text-amber-300",
       bg: "bg-amber-400/20",
-      label: "Controleren...",
-      description: "Verbinding wordt gecontroleerd",
+      label: NL.connection.checking,
+      description: NL.connection.checkingDescription,
     },
     online: {
       icon: Wifi,
       color: "text-emerald-300",
       bg: "bg-emerald-400/20",
-      label: "Online",
-      description: "Realtime verbinding actief",
+      label: NL.connection.online,
+      description: NL.connection.onlineDescription,
     },
     offline: {
       icon: WifiOff,
       color: "text-red-300",
       bg: "bg-red-400/20",
-      label: "Offline",
-      description: "Geen verbinding met server",
+      label: NL.connection.offline,
+      description: NL.connection.offlineDescription,
     },
   };
 
@@ -125,11 +128,9 @@ const ChatBot = () => {
               <BotAvatar size="md" className="backdrop-blur" />
               <div>
                 <h1 className="text-glow text-2xl font-semibold leading-tight">
-                  Altijd klaar om te helpen
+                  {NL.chat.title}
                 </h1>
-                <p className="text-sm text-white/70">
-                  Vraag me alles en ik antwoord met flair.
-                </p>
+                <p className="text-sm text-white/70">{NL.chat.subtitle}</p>
               </div>
             </div>
           </div>
@@ -163,7 +164,7 @@ const ChatBot = () => {
                 className="inline-flex items-center gap-1.5 rounded-full bg-red-500/30 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-red-500/40"
               >
                 <RefreshCw className="size-3.5" />
-                Opnieuw proberen
+                {NL.chat.retryLabel}
               </button>
             </div>
           )}
@@ -187,10 +188,9 @@ const ChatBot = () => {
           <ChatInput onSubmit={onSubmit} isLoading={isAssistantTyping} />
           <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
             <Sparkles className="size-3.5 text-cyan-200" />
-            {SITE.botName} gebruikt contextuele prompts voor persoonlijkere
-            antwoorden.
+            {SITE.botName} {NL.chat.footerNote}
             <Zap className="ml-auto size-3.5 text-amber-300" />
-            <span className="text-white/40">Snel & persoonlijk</span>
+            <span className="text-white/40">{NL.chat.footerTagline}</span>
           </p>
         </div>
       </section>
