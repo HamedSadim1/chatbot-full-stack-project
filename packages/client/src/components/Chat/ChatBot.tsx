@@ -128,7 +128,7 @@ const ChatBot = () => {
   const StatusIcon = currentStatus.icon;
 
   return (
-    <div className="flex min-h-[600px] flex-col gap-6 text-white">
+    <div className="flex min-h-150 flex-col gap-6 text-white">
       <header className="glass-panel rounded-[32px] border border-white/10 px-5 py-6 sm:px-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-2">

@@ -4,8 +4,8 @@ import { Bot, ExternalLink, MessageCircle } from "lucide-react";
 function App() {
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden px-4 py-6 sm:py-12">
-      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[480px] w-[480px] rounded-full bg-cyan-400/30 blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-40 right-0 h-[420px] w-[420px] rounded-full bg-violet-500/25 blur-[140px]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-120 w-120 rounded-full bg-cyan-400/30 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-40 right-0 h-105 w-105 rounded-full bg-violet-500/25 blur-[140px]" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6">
         <nav className="glass-panel flex flex-col gap-3 rounded-[28px] border border-white/10 px-5 py-4 text-white sm:flex-row sm:items-center sm:justify-between sm:gap-0">
