@@ -122,7 +122,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
           type="submit"
           disabled={!isValid}
           aria-label="Verstuur bericht"
-          className="h-10 w-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_10px_30px_rgba(14,165,233,0.45)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_rgba(14,165,233,0.55)] disabled:opacity-40 disabled:hover:scale-100"
+          className="h-10 w-10 rounded-full bg-linear-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_10px_30px_rgba(14,165,233,0.45)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_rgba(14,165,233,0.55)] disabled:opacity-40 disabled:hover:scale-100"
         >
           {isLoading ? (
             <Loader2 className="size-5 animate-spin" />

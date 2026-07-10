@@ -136,7 +136,7 @@ const ChatBot = () => {
               WonderChat
             </p>
             <div className="flex items-center gap-3">
-              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400/20 to-violet-500/20 backdrop-blur">
+              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400/20 to-violet-500/20 backdrop-blur">
                 <Bot className="size-5 text-cyan-200" />
               </span>
               <div>

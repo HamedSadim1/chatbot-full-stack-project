@@ -43,7 +43,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
   if (messages.length === 0) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-        <div className="inline-flex size-16 items-center justify-center rounded-3xl bg-gradient-to-br from-cyan-400/20 to-violet-500/20 backdrop-blur">
+        <div className="inline-flex size-16 items-center justify-center rounded-3xl bg-linear-to-br from-cyan-400/20 to-violet-500/20 backdrop-blur">
           <Bot className="size-8 text-cyan-200" />
         </div>
         <div className="max-w-md space-y-2">
@@ -73,7 +73,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
             <div
               className={`flex size-9 shrink-0 items-center justify-center rounded-2xl backdrop-blur ${
                 isUser
-                  ? "bg-gradient-to-br from-cyan-400 to-blue-500 text-slate-950"
+                  ? "bg-linear-to-br from-cyan-400 to-blue-500 text-slate-950"
                   : "bg-white/10 text-cyan-200"
               }`}
               aria-hidden="true"
@@ -101,7 +101,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                 ref={isLast ? lastMessageRef : null}
                 className={`group relative max-w-2xl rounded-3xl px-5 py-4 text-sm leading-relaxed shadow-lg transition-all ${
                   isUser
-                    ? "bg-gradient-to-r from-cyan-400/90 via-sky-500/80 to-indigo-500/90 text-white shadow-[0_10px_40px_rgba(14,165,233,0.35)]"
+                    ? "bg-linear-to-r from-cyan-400/90 via-sky-500/80 to-indigo-500/90 text-white shadow-[0_10px_40px_rgba(14,165,233,0.35)]"
                     : "glass-panel border border-white/10 bg-white/8 text-slate-50"
                 }`}
               >

@@ -10,7 +10,7 @@ function App() {
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6">
         <nav className="glass-panel flex flex-col gap-3 rounded-[28px] border border-white/10 px-5 py-4 text-white sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="flex items-center gap-3">
-            <span className="inline-flex size-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400/20 to-violet-500/20">
+            <span className="inline-flex size-10 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400/20 to-violet-500/20">
               <Bot className="size-5 text-cyan-200" />
             </span>
             <div>
