@@ -1,11 +1,16 @@
 const TypingIndicator = () => {
   return (
-    <div className="glass-panel inline-flex items-center gap-2 self-start rounded-2xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.4em] text-white/60">
-      AI typt
-      <div className="flex items-center gap-1">
-        <Dot />
-        <Dot className="animation-delay-0.2s" />
-        <Dot className="animation-delay-0.4s" />
+    <div
+      className="inline-flex items-center gap-3 self-start rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-2 duration-300"
+      aria-label="AI is aan het typen"
+    >
+      <span className="text-xs font-medium uppercase tracking-wider text-white/60">
+        AI typt
+      </span>
+      <div className="flex items-center gap-1.5">
+        <Dot delay="0ms" />
+        <Dot delay="150ms" />
+        <Dot delay="300ms" />
       </div>
     </div>
   );
@@ -14,11 +19,15 @@ const TypingIndicator = () => {
 export default TypingIndicator;
 
 type DotProps = {
-  className?: string;
+  delay: string;
 };
 
-const Dot = ({ className }: DotProps) => (
+const Dot = ({ delay }: DotProps) => (
   <div
-    className={`h-2 w-2 rounded-full bg-gradient-to-r from-cyan-200 to-violet-200 opacity-80 animate-ping ${className}`}
-  ></div>
+    className="size-2 rounded-full bg-gradient-to-r from-cyan-200 to-violet-200"
+    style={{
+      animation: "typing-bounce 1.2s ease-in-out infinite",
+      animationDelay: delay,
+    }}
+  />
 );
