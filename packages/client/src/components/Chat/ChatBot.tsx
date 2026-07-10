@@ -129,7 +129,7 @@ const ChatBot = () => {
 
   return (
     <div className="flex min-h-150 flex-col gap-6 text-white">
-      <header className="glass-panel rounded-[32px] border border-white/10 px-5 py-6 sm:px-8">
+      <header className="glass-panel rounded-4xl border border-white/10 px-5 py-6 sm:px-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-[0.4em] text-white/60">
@@ -165,7 +165,7 @@ const ChatBot = () => {
         </div>
       </header>
 
-      <section className="glass-panel flex flex-1 flex-col gap-4 rounded-[32px] border border-white/10 p-4 sm:p-6">
+      <section className="glass-panel flex flex-1 flex-col gap-4 rounded-4xl border border-white/10 p-4 sm:p-6">
         <div className="frosted-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-2">
           <ChatMessages messages={messages} />
 

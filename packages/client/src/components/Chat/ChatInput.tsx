@@ -76,7 +76,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
     <form
       onSubmit={handleFormSubmit}
       onKeyDown={handleKeyDown}
-      className="group relative flex flex-col gap-2 rounded-[28px] border border-white/10 bg-white/5 px-4 py-3 shadow-lg backdrop-blur-2xl transition focus-within:border-cyan-400/50 focus-within:bg-white/8 focus-within:shadow-[0_0_40px_rgba(14,165,233,0.2)]"
+      className="group relative flex flex-col gap-2 rounded-28 border border-white/10 bg-white/5 px-4 py-3 shadow-lg backdrop-blur-2xl transition focus-within:border-cyan-400/50 focus-within:bg-white/8 focus-within:shadow-[0_0_40px_rgba(14,165,233,0.2)]"
       aria-label="Chat invoer"
     >
       <textarea

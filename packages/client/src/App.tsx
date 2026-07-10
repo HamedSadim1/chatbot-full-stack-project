@@ -8,7 +8,7 @@ function App() {
       <div className="pointer-events-none absolute -bottom-40 right-0 h-105 w-105 rounded-full bg-violet-500/25 blur-[140px]" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6">
-        <nav className="glass-panel flex flex-col gap-3 rounded-[28px] border border-white/10 px-5 py-4 text-white sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+        <nav className="glass-panel flex flex-col gap-3 rounded-28 border border-white/10 px-5 py-4 text-white sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="flex items-center gap-3">
             <span className="inline-flex size-10 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400/20 to-violet-500/20">
               <Bot className="size-5 text-cyan-200" />
@@ -66,7 +66,7 @@ function App() {
 
         <ChatBot />
 
-        <footer className="glass-panel mt-auto rounded-[24px] border border-white/10 px-4 py-4 text-sm text-white/70 sm:flex sm:items-center sm:justify-between">
+        <footer className="glass-panel mt-auto rounded-3xl border border-white/10 px-4 py-4 text-sm text-white/70 sm:flex sm:items-center sm:justify-between">
           <p>
             Gemaakt door{" "}
             <span className="font-semibold text-white">Hamed Sadim</span>
