@@ -24,9 +24,11 @@ const ChatBot = () => {
     useState<ConnectionStatus>("checking");
 
   const conversationId = useRef(crypto.randomUUID()).current;
+  const scrollAnchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
+    let timer: ReturnType<typeof setTimeout>;
 
     const checkConnection = async () => {
       try {
@@ -36,16 +38,23 @@ const ChatBot = () => {
         if (!cancelled) setConnectionStatus("online");
       } catch {
         if (!cancelled) setConnectionStatus("offline");
+      } finally {
+        if (!cancelled) {
+          timer = setTimeout(checkConnection, TIMING.healthCheckInterval);
+        }
       }
     };
 
     void checkConnection();
-    const interval = setInterval(checkConnection, TIMING.healthCheckInterval);
     return () => {
       cancelled = true;
-      clearInterval(interval);
+      clearTimeout(timer);
     };
   }, []);
+
+  useEffect(() => {
+    scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isAssistantTyping, error]);
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
     try {
@@ -108,6 +117,7 @@ const ChatBot = () => {
               onSelect={handleSuggestedPrompt}
             />
           )}
+          <div ref={scrollAnchorRef} className="h-px w-full shrink-0" />
         </div>
         <ChatFooter onSubmit={onSubmit} isLoading={isAssistantTyping} />
       </section>

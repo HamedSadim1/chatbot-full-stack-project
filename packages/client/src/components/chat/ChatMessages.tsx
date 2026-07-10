@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Check, Copy, User } from "lucide-react";
 import { BotAvatar } from "@/components/ui";
@@ -19,7 +19,6 @@ const formatTime = (date?: Date) => {
 };
 
 const ChatMessages = ({ messages }: ChatMessagesProps) => {
-  const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleCopy = async (text: string, index: number) => {
@@ -31,12 +30,6 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
       console.error("Failed to copy text:", error);
     }
   };
-
-  useEffect(() => {
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
 
   if (messages.length === 0) {
     return (
@@ -58,7 +51,6 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
     <div className="flex flex-col gap-5">
       {messages.map((msg, index) => {
         const isUser = msg.role === "user";
-        const isLast = index === messages.length - 1;
 
         return (
           <div
@@ -89,7 +81,6 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
               </div>
 
               <div
-                ref={isLast ? lastMessageRef : null}
                 className={`group relative max-w-2xl rounded-3xl px-5 py-4 text-sm leading-relaxed shadow-lg transition-all ${
                   isUser
                     ? "bg-linear-to-r from-cyan-400/90 via-sky-500/80 to-indigo-500/90 text-white shadow-[0_10px_40px_rgba(14,165,233,0.35)]"
