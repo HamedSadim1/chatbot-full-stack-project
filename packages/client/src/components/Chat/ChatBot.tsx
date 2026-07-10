@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { RefreshCw, Sparkles, Wifi, WifiOff, Zap } from "lucide-react";
-import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import TypingIndicator from "./TypingIndicator";
-import { BotAvatar } from "@/components/ui/BotAvatar";
+import { ChatHeader } from "./ChatHeader";
+import { ErrorBanner } from "./ErrorBanner";
+import { SuggestedPrompts } from "./SuggestedPrompts";
+import { ChatFooter } from "./ChatFooter";
 import { playAudioSafe, popAudio, notificationAudio } from "@/lib/audio";
 import { apiClient } from "@/lib/api";
-import { API, CHAT, SITE, TIMING } from "@/lib/constants";
+import { API, CHAT, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
 import type {
   ChatFormData,
@@ -14,8 +15,6 @@ import type {
   ConnectionStatus,
   Message,
 } from "@/types/chat";
-
-const SUGGESTED_PROMPTS = CHAT.suggestedPrompts;
 
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -89,110 +88,28 @@ const ChatBot = () => {
     void onSubmit({ prompt });
   };
 
-  const statusConfig = {
-    checking: {
-      icon: Wifi,
-      color: "text-amber-300",
-      bg: "bg-amber-400/20",
-      label: NL.connection.checking,
-      description: NL.connection.checkingDescription,
-    },
-    online: {
-      icon: Wifi,
-      color: "text-emerald-300",
-      bg: "bg-emerald-400/20",
-      label: NL.connection.online,
-      description: NL.connection.onlineDescription,
-    },
-    offline: {
-      icon: WifiOff,
-      color: "text-red-300",
-      bg: "bg-red-400/20",
-      label: NL.connection.offline,
-      description: NL.connection.offlineDescription,
-    },
-  };
-
-  const currentStatus = statusConfig[connectionStatus];
-  const StatusIcon = currentStatus.icon;
+  const showSuggestedPrompts =
+    messages.length === 0 && !isAssistantTyping && !error;
 
   return (
     <div className="flex min-h-150 flex-col gap-6 text-white">
-      <header className="glass-panel rounded-4xl border border-white/10 px-5 py-6 sm:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-2">
-            <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-              {SITE.name}
-            </p>
-            <div className="flex items-center gap-3">
-              <BotAvatar size="md" className="backdrop-blur" />
-              <div>
-                <h1 className="text-glow text-2xl font-semibold leading-tight">
-                  {NL.chat.title}
-                </h1>
-                <p className="text-sm text-white/70">{NL.chat.subtitle}</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 rounded-3xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
-            <div className="flex flex-col text-right text-xs text-white/70">
-              <span className="font-semibold text-white">
-                {currentStatus.label}
-              </span>
-              <span>{currentStatus.description}</span>
-            </div>
-            <span
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${currentStatus.bg}`}
-            >
-              <StatusIcon className={`size-4 ${currentStatus.color}`} />
-            </span>
-          </div>
-        </div>
-      </header>
+      <ChatHeader status={connectionStatus} />
 
       <section className="glass-panel flex flex-1 flex-col gap-4 rounded-4xl border border-white/10 p-4 sm:p-6">
         <div className="frosted-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-2">
           <ChatMessages messages={messages} />
 
           {isAssistantTyping && <TypingIndicator />}
-          {error && (
-            <div className="flex items-center justify-between gap-3 rounded-2xl border border-red-400/40 bg-red-500/20 px-4 py-3 text-sm text-red-50 animate-in fade-in slide-in-from-bottom-2">
-              <span>{error}</span>
-              <button
-                type="button"
-                onClick={handleRetry}
-                className="inline-flex items-center gap-1.5 rounded-full bg-red-500/30 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-red-500/40"
-              >
-                <RefreshCw className="size-3.5" />
-                {NL.chat.retryLabel}
-              </button>
-            </div>
-          )}
+          {error && <ErrorBanner error={error} onRetry={handleRetry} />}
 
-          {messages.length === 0 && !isAssistantTyping && !error && (
-            <div className="flex flex-wrap gap-2 pt-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {SUGGESTED_PROMPTS.map((prompt) => (
-                <button
-                  key={prompt}
-                  type="button"
-                  onClick={() => handleSuggestedPrompt(prompt)}
-                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 transition hover:border-cyan-400/50 hover:bg-white/10 hover:text-white"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
+          {showSuggestedPrompts && (
+            <SuggestedPrompts
+              prompts={CHAT.suggestedPrompts}
+              onSelect={handleSuggestedPrompt}
+            />
           )}
         </div>
-        <div className="pt-1">
-          <ChatInput onSubmit={onSubmit} isLoading={isAssistantTyping} />
-          <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
-            <Sparkles className="size-3.5 text-cyan-200" />
-            {SITE.botName} {NL.chat.footerNote}
-            <Zap className="ml-auto size-3.5 text-amber-300" />
-            <span className="text-white/40">{NL.chat.footerTagline}</span>
-          </p>
-        </div>
+        <ChatFooter onSubmit={onSubmit} isLoading={isAssistantTyping} />
       </section>
     </div>
   );
