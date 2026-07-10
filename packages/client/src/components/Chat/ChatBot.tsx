@@ -1,30 +1,20 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Bot, RefreshCw, Sparkles, Wifi, WifiOff, Zap } from "lucide-react";
-import ChatInput, { type ChatFormData } from "./ChatInput";
-import type { Message } from "./ChatMessages";
+import { RefreshCw, Sparkles, Wifi, WifiOff, Zap } from "lucide-react";
+import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import TypingIndicator from "./TypingIndicator";
-import popSound from "@/assets/sounds/pop.mp3";
-import notificationSound from "@/assets/sounds/notification.mp3";
+import { BotAvatar } from "@/components/ui/BotAvatar";
+import { popAudio, notificationAudio } from "@/lib/audio";
+import { API, CHAT, SITE } from "@/lib/constants";
+import type {
+  ChatFormData,
+  ChatResponse,
+  ConnectionStatus,
+  Message,
+} from "@/types/chat";
 
-const popAudio = new Audio(popSound);
-popAudio.volume = 0.2;
-
-const notificationAudio = new Audio(notificationSound);
-notificationAudio.volume = 0.2;
-
-type ChatResponse = {
-  message: string;
-};
-
-type ConnectionStatus = "checking" | "online" | "offline";
-
-const SUGGESTED_PROMPTS = [
-  "Wat kun je allemaal doen?",
-  "Vertel me iets interessants over AI.",
-  "Help me met een creatief idee.",
-];
+const SUGGESTED_PROMPTS = CHAT.suggestedPrompts;
 
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -34,17 +24,15 @@ const ChatBot = () => {
     useState<ConnectionStatus>("checking");
 
   const conversationId = useRef(crypto.randomUUID()).current;
-  const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(
-    /\/$/,
-    ""
-  );
 
   useEffect(() => {
     let cancelled = false;
 
     const checkConnection = async () => {
       try {
-        await axios.get(`${API_BASE_URL}/hello`, { timeout: 5000 });
+        await axios.get(`${API.baseUrl}${API.healthEndpoint}`, {
+          timeout: 5000,
+        });
         if (!cancelled) setConnectionStatus("online");
       } catch {
         if (!cancelled) setConnectionStatus("offline");
@@ -57,7 +45,7 @@ const ChatBot = () => {
       cancelled = true;
       clearInterval(interval);
     };
-  }, [API_BASE_URL]);
+  }, []);
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
     try {
@@ -69,10 +57,13 @@ const ChatBot = () => {
       setError("");
       void popAudio.play().catch(() => null);
 
-      const { data } = await axios.post<ChatResponse>(`${API_BASE_URL}/chat`, {
-        prompt,
-        conversationId,
-      });
+      const { data } = await axios.post<ChatResponse>(
+        `${API.baseUrl}${API.chatEndpoint}`,
+        {
+          prompt,
+          conversationId,
+        }
+      );
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.message, timestamp: new Date() },
@@ -133,12 +124,10 @@ const ChatBot = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-              WonderChat
+              {SITE.name}
             </p>
             <div className="flex items-center gap-3">
-              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400/20 to-violet-500/20 backdrop-blur">
-                <Bot className="size-5 text-cyan-200" />
-              </span>
+              <BotAvatar size="md" className="backdrop-blur" />
               <div>
                 <h1 className="text-glow text-2xl font-semibold leading-tight">
                   Altijd klaar om te helpen
@@ -203,7 +192,7 @@ const ChatBot = () => {
           <ChatInput onSubmit={onSubmit} isLoading={isAssistantTyping} />
           <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
             <Sparkles className="size-3.5 text-cyan-200" />
-            WonderWord gebruikt contextuele prompts voor persoonlijkere
+            {SITE.botName} gebruikt contextuele prompts voor persoonlijkere
             antwoorden.
             <Zap className="ml-auto size-3.5 text-amber-300" />
             <span className="text-white/40">Snel & persoonlijk</span>

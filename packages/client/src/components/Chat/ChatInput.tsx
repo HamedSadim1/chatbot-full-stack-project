@@ -2,18 +2,13 @@ import { useEffect, useRef } from "react";
 import { ArrowUp, Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "../ui/button";
-
-export type ChatFormData = {
-  prompt: string;
-};
+import { CHAT } from "@/lib/constants";
+import type { ChatFormData } from "@/types/chat";
 
 type Props = {
   onSubmit: (data: ChatFormData) => Promise<void>;
   isLoading?: boolean;
 };
-
-const MAX_LENGTH = 1000;
-const MIN_LENGTH = 5;
 
 const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -36,12 +31,12 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
   const { ref, ...rest } = register("prompt", {
     required: "Typ eerst een bericht.",
     minLength: {
-      value: MIN_LENGTH,
-      message: `Bericht moet minimaal ${MIN_LENGTH} tekens bevatten.`,
+      value: CHAT.minLength,
+      message: `Bericht moet minimaal ${CHAT.minLength} tekens bevatten.`,
     },
     maxLength: {
-      value: MAX_LENGTH,
-      message: `Bericht mag maximaal ${MAX_LENGTH} tekens bevatten.`,
+      value: CHAT.maxLength,
+      message: `Bericht mag maximaal ${CHAT.maxLength} tekens bevatten.`,
     },
     validate: (value) =>
       value.trim().length > 0 || "Bericht mag niet alleen spaties bevatten.",
@@ -69,7 +64,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
 
   const isValid =
     !formState.errors.prompt &&
-    promptValue.trim().length >= MIN_LENGTH &&
+    promptValue.trim().length >= CHAT.minLength &&
     !isLoading;
 
   return (
@@ -87,8 +82,8 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
         }}
         className="w-full resize-none border-0 bg-transparent text-base leading-relaxed text-white placeholder-white/50 focus:outline-none focus:ring-0 disabled:opacity-60"
         placeholder="Vertel me je idee of vraag..."
-        maxLength={MAX_LENGTH}
-        minLength={MIN_LENGTH}
+        maxLength={CHAT.maxLength}
+        minLength={CHAT.minLength}
         autoFocus
         rows={1}
         disabled={isLoading}
@@ -108,12 +103,12 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
           ) : (
             <span
               className={`text-xs transition-colors ${
-                characterCount >= MAX_LENGTH * 0.9
+                characterCount >= CHAT.maxLength * 0.9
                   ? "text-amber-300"
                   : "text-white/40"
               }`}
             >
-              {characterCount}/{MAX_LENGTH}
+              {characterCount}/{CHAT.maxLength}
             </span>
           )}
         </div>

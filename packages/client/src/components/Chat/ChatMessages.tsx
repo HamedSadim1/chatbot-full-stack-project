@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Bot, Check, Copy, User } from "lucide-react";
-
-export type Message = {
-  role: "user" | "assistant";
-  content: string;
-  timestamp?: Date;
-};
+import { Check, Copy, User } from "lucide-react";
+import { BotAvatar } from "@/components/ui/BotAvatar";
+import { SITE } from "@/lib/constants";
+import type { Message } from "@/types/chat";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -43,12 +40,10 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
   if (messages.length === 0) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-        <div className="inline-flex size-16 items-center justify-center rounded-3xl bg-linear-to-br from-cyan-400/20 to-violet-500/20 backdrop-blur">
-          <Bot className="size-8 text-cyan-200" />
-        </div>
+        <BotAvatar size="lg" className="backdrop-blur" />
         <div className="max-w-md space-y-2">
           <h2 className="text-xl font-semibold text-white">
-            Welkom bij WonderChat
+            Welkom bij {SITE.name}
           </h2>
           <p className="text-sm leading-relaxed text-white/60">
             Stel een vraag of deel een idee. Ik ben hier om je te helpen met
@@ -78,11 +73,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
               }`}
               aria-hidden="true"
             >
-              {isUser ? (
-                <User className="size-4" />
-              ) : (
-                <Bot className="size-4" />
-              )}
+              {isUser ? <User className="size-4" /> : <BotAvatar size="sm" />}
             </div>
 
             <div
@@ -90,7 +81,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
             >
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-medium uppercase tracking-wider text-white/60">
-                  {isUser ? "Jij" : "WonderWord"}
+                  {isUser ? "Jij" : SITE.botName}
                 </span>
                 <span className="text-[10px] text-white/40">
                   {formatTime(msg.timestamp)}
