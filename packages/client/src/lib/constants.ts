@@ -6,6 +6,12 @@ export const SITE = {
   githubUrl: "https://github.com/HamedSadim1",
 } as const;
 
+export const NAV_LINKS = [
+  { label: "Chat", href: "#" },
+  { label: "Features", href: "#" },
+  { label: "Contact", href: "#" },
+] as const;
+
 export const API = {
   baseUrl: (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, ""),
   healthEndpoint: "/hello",

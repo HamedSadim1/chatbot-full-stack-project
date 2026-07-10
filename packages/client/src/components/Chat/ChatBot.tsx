@@ -1,11 +1,11 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { RefreshCw, Sparkles, Wifi, WifiOff, Zap } from "lucide-react";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import TypingIndicator from "./TypingIndicator";
 import { BotAvatar } from "@/components/ui/BotAvatar";
-import { popAudio, notificationAudio } from "@/lib/audio";
+import { playAudioSafe, popAudio, notificationAudio } from "@/lib/audio";
+import { apiClient } from "@/lib/api";
 import { API, CHAT, SITE } from "@/lib/constants";
 import type {
   ChatFormData,
@@ -30,9 +30,7 @@ const ChatBot = () => {
 
     const checkConnection = async () => {
       try {
-        await axios.get(`${API.baseUrl}${API.healthEndpoint}`, {
-          timeout: 5000,
-        });
+        await apiClient.get(API.healthEndpoint, { timeout: 5000 });
         if (!cancelled) setConnectionStatus("online");
       } catch {
         if (!cancelled) setConnectionStatus("offline");
@@ -55,20 +53,17 @@ const ChatBot = () => {
       ]);
       setIsAssistantTyping(true);
       setError("");
-      void popAudio.play().catch(() => null);
+      playAudioSafe(popAudio);
 
-      const { data } = await axios.post<ChatResponse>(
-        `${API.baseUrl}${API.chatEndpoint}`,
-        {
-          prompt,
-          conversationId,
-        }
-      );
+      const { data } = await apiClient.post<ChatResponse>(API.chatEndpoint, {
+        prompt,
+        conversationId,
+      });
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.message, timestamp: new Date() },
       ]);
-      void notificationAudio.play().catch(() => null);
+      playAudioSafe(notificationAudio);
     } catch (error) {
       console.error(error);
       setError("Er is een fout opgetreden. Probeer het later opnieuw.");

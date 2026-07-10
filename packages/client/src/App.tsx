@@ -1,7 +1,8 @@
 import ChatBot from "./components/Chat/ChatBot";
 import { BotAvatar } from "./components/ui/BotAvatar";
-import { ExternalLink, MessageCircle } from "lucide-react";
-import { SITE } from "./lib/constants";
+import { ExternalLink } from "./components/ui/ExternalLink";
+import { ExternalLink as ExternalLinkIcon, MessageCircle } from "lucide-react";
+import { NAV_LINKS, SITE } from "./lib/constants";
 
 function App() {
   return (
@@ -21,46 +22,33 @@ function App() {
             </div>
           </div>
           <div className="hidden items-center gap-4 text-sm text-white/70 sm:flex">
-            <a
-              href="#"
-              className="rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-white"
-            >
-              Chat
-            </a>
-            <a
-              href="#"
-              className="rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-white"
-            >
-              Features
-            </a>
-            <a
-              href="#"
-              className="rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-white"
-            >
-              Contact
-            </a>
-            <a
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-white"
+              >
+                {link.label}
+              </a>
+            ))}
+            <ExternalLink
               href={SITE.portfolioUrl}
-              target="_blank"
-              rel="noreferrer"
               className="rounded-full border border-white/20 px-4 py-1.5 text-white transition hover:border-white/60 hover:bg-white/5"
             >
               Portfolio
-            </a>
+            </ExternalLink>
           </div>
           <div className="flex items-center justify-between text-sm text-white/70 sm:hidden">
             <span className="flex items-center gap-2">
               <MessageCircle className="size-4" />
               Chat &amp; AI assistent
             </span>
-            <a
+            <ExternalLink
               href={SITE.portfolioUrl}
-              target="_blank"
-              rel="noreferrer"
               className="rounded-full border border-white/20 px-3 py-1 text-white transition hover:border-white/60"
             >
               Portfolio
-            </a>
+            </ExternalLink>
           </div>
         </nav>
 
@@ -72,24 +60,20 @@ function App() {
             <span className="font-semibold text-white">{SITE.author}</span>
           </p>
           <div className="mt-2 flex items-center gap-4 sm:mt-0">
-            <a
+            <ExternalLink
               className="inline-flex items-center gap-2 text-white/80 underline-offset-4 hover:text-white hover:underline"
               href={SITE.portfolioUrl}
-              target="_blank"
-              rel="noreferrer"
             >
               {SITE.portfolioUrl.replace("https://", "")}
-            </a>
-            <a
+            </ExternalLink>
+            <ExternalLink
               href={SITE.githubUrl}
-              target="_blank"
-              rel="noreferrer"
               className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
               aria-label="GitHub"
             >
-              <ExternalLink className="size-3.5" />
+              <ExternalLinkIcon className="size-3.5" />
               GitHub
-            </a>
+            </ExternalLink>
           </div>
         </footer>
       </div>

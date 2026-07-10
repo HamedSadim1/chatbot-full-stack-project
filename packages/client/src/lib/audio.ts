@@ -13,3 +13,7 @@ export const notificationAudio = createAudio(
   notificationSound,
   AUDIO.notificationVolume
 );
+
+export const playAudioSafe = (audio: HTMLAudioElement) => {
+  void audio.play().catch(() => null);
+};
