@@ -49,7 +49,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
     await onSubmit(data);
   });
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       void handleFormSubmit();
@@ -63,6 +63,10 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
     textarea.style.height = `${Math.min(textarea.scrollHeight, TIMING.textareaMaxHeight)}px`;
   }, [promptValue]);
 
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
   const isValid =
     !formState.errors.prompt &&
     promptValue.trim().length >= CHAT.minLength &&
@@ -71,7 +75,6 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
   return (
     <form
       onSubmit={handleFormSubmit}
-      onKeyDown={handleKeyDown}
       className="group relative flex flex-col gap-2 rounded-28 border border-white/10 bg-white/5 px-4 py-3 shadow-lg backdrop-blur-2xl transition focus-within:border-cyan-400/50 focus-within:bg-white/8 focus-within:shadow-[0_0_40px_rgba(14,165,233,0.2)]"
       aria-label={NL.chat.inputAriaLabel}
     >
@@ -85,7 +88,6 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
         placeholder={NL.chat.placeholder}
         maxLength={CHAT.maxLength}
         minLength={CHAT.minLength}
-        autoFocus
         rows={1}
         disabled={isLoading}
         aria-invalid={formState.errors.prompt ? "true" : "false"}
@@ -93,6 +95,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
           setValue("prompt", e.target.value, { shouldValidate: true });
           clearErrors("prompt");
         }}
+        onKeyDown={handleKeyDown}
       />
 
       <div className="flex items-center justify-between gap-3">
