@@ -51,11 +51,12 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
     <div className="flex flex-col gap-5">
       {messages.map((msg, index) => {
         const isUser = msg.role === "user";
+        const messageKey = `${msg.timestamp?.getTime() ?? index}-${index}`;
 
         return (
           <div
-            key={index}
-            className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+            key={messageKey}
+            className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""} animate-in fade-in slide-in-from-bottom-2 duration-300 will-change-transform`}
           >
             <div
               className={`flex size-9 shrink-0 items-center justify-center rounded-2xl backdrop-blur ${

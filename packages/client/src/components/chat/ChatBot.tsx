@@ -53,7 +53,11 @@ const ChatBot = () => {
   }, []);
 
   useEffect(() => {
-    scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+    const timer = setTimeout(() => {
+      scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [messages, isAssistantTyping, error]);
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
