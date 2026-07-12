@@ -87,6 +87,7 @@ const ChatBot = () => {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let currentMessage = "";
+      let lineBuffer = "";
 
       if (!reader) {
         throw new Error("No response body");
@@ -97,40 +98,59 @@ const ChatBot = () => {
         { role: "assistant", content: "", timestamp: new Date() },
       ]);
 
+      const appendChunk = (chunk: string) => {
+        currentMessage += chunk;
+        setMessages((prev) => {
+          const lastMessage = prev[prev.length - 1];
+          if (!lastMessage || lastMessage.role !== "assistant") {
+            return prev;
+          }
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = {
+            ...lastMessage,
+            content: currentMessage,
+          };
+          return newMessages;
+        });
+      };
+
+      const parseSSELine = (line: string) => {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data: ")) return;
+
+        let data: { chunk: string } | { done: true } | { error: string };
+
+        try {
+          data = JSON.parse(trimmed.slice(6)) as
+            { chunk: string } | { done: true } | { error: string };
+        } catch (parseError) {
+          console.error("Failed to parse SSE line:", trimmed, parseError);
+          return;
+        }
+
+        if ("error" in data) {
+          throw new Error(data.error);
+        }
+
+        if ("chunk" in data) {
+          appendChunk(data.chunk);
+        }
+      };
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk
-          .split("\n")
-          .filter((line) => line.startsWith("data: "));
+        lineBuffer += decoder.decode(value, { stream: true });
+        const lines = lineBuffer.split("\n");
+        lineBuffer = lines.pop() ?? "";
 
         for (const line of lines) {
-          const data = JSON.parse(line.slice(6)) as
-            { chunk: string } | { done: true } | { error: string };
-
-          if ("error" in data) {
-            throw new Error(data.error);
-          }
-
-          if ("chunk" in data) {
-            currentMessage += data.chunk;
-            setMessages((prev) => {
-              const lastMessage = prev[prev.length - 1];
-              if (!lastMessage || lastMessage.role !== "assistant") {
-                return prev;
-              }
-              const newMessages = [...prev];
-              newMessages[newMessages.length - 1] = {
-                ...lastMessage,
-                content: currentMessage,
-              };
-              return newMessages;
-            });
-          }
+          parseSSELine(line);
         }
       }
+
+      parseSSELine(lineBuffer);
 
       playAudioSafe(notificationAudio);
     } catch (error) {

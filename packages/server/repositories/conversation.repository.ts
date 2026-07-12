@@ -1,3 +1,6 @@
+import { LRUCache } from "lru-cache";
+import { config } from "../config";
+
 export type ConversationMessage = {
   role: "system" | "user" | "assistant";
   content: string;
@@ -9,17 +12,17 @@ export interface ConversationRepository {
   reset(conversationId: string): void;
 }
 
-const MAX_STORED_MESSAGES = 50;
-
 class InMemoryConversationRepository implements ConversationRepository {
-  private conversations = new Map<string, ConversationMessage[]>();
+  private conversations = new LRUCache<string, ConversationMessage[]>({
+    max: config.chat.maxConversations,
+  });
 
   getMessages(conversationId: string): ConversationMessage[] {
     return this.conversations.get(conversationId) ?? [];
   }
 
   setMessages(conversationId: string, messages: ConversationMessage[]) {
-    const trimmed = messages.slice(-MAX_STORED_MESSAGES);
+    const trimmed = messages.slice(-config.chat.maxStoredMessages);
     this.conversations.set(conversationId, trimmed);
   }
 

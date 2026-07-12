@@ -1,10 +1,9 @@
 import express, { type Request, type Response } from "express";
 import { chatController } from "./controllers/chat.controller";
 import { logger } from "./lib/logger";
+import { config } from "./config";
 
-const OLLAMA_BASE_URL = (
-  process.env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434"
-).replace(/\/$/, "");
+const OLLAMA_BASE_URL = config.ollama.baseUrl;
 
 const router = express.Router();
 

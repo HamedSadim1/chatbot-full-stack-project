@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { LRUCache } from "lru-cache";
 import type { Response } from "express";
 import {
   conversationRepository,
@@ -7,22 +8,7 @@ import {
 } from "../repositories/conversation.repository";
 import template from "../prompts/chatbox.txt";
 import { logger } from "../lib/logger";
-
-const OLLAMA_BASE_URL = (
-  process.env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434"
-).replace(/\/$/, "");
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "llama3.1";
-
-const toNumber = (value: string | undefined, fallback: number) => {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-};
-
-const OLLAMA_TEMPERATURE = toNumber(process.env.OLLAMA_TEMPERATURE, 0.2);
-const OLLAMA_MAX_TOKENS = toNumber(process.env.OLLAMA_MAX_TOKENS, 256);
-const OLLAMA_TIMEOUT_MS = toNumber(process.env.OLLAMA_TIMEOUT_MS, 30000);
-const MAX_HISTORY_MESSAGES = toNumber(process.env.MAX_HISTORY_MESSAGES, 10);
-const CACHE_TTL_MS = toNumber(process.env.CACHE_TTL_MS, 1000 * 60 * 60);
+import { config } from "../config";
 
 let instructionsPromise: Promise<string> | null = null;
 
@@ -35,12 +21,11 @@ interface OllamaStreamChunk {
   error?: string;
 }
 
-interface CacheEntry {
-  response: string;
-  expiresAt: number;
-}
-
-const responseCache = new Map<string, CacheEntry>();
+const responseCache = new LRUCache<string, string>({
+  max: config.chat.maxCacheEntries,
+  ttl: config.chat.cacheTtlMs,
+  updateAgeOnGet: true,
+});
 
 const buildInstructions = async (): Promise<string> => {
   const parkInfo = await fs.readFile(
@@ -58,23 +43,6 @@ const getInstructions = (): Promise<string> => {
 };
 
 const getCacheKey = (prompt: string) => prompt.trim().toLowerCase();
-
-const getCachedResponse = (prompt: string): string | undefined => {
-  const entry = responseCache.get(getCacheKey(prompt));
-  if (!entry) return undefined;
-  if (Date.now() > entry.expiresAt) {
-    responseCache.delete(getCacheKey(prompt));
-    return undefined;
-  }
-  return entry.response;
-};
-
-const setCachedResponse = (prompt: string, response: string) => {
-  responseCache.set(getCacheKey(prompt), {
-    response,
-    expiresAt: Date.now() + CACHE_TTL_MS,
-  });
-};
 
 const sendSSE = (res: Response, data: unknown) => {
   res.write(`data: ${JSON.stringify(data)}\n\n`);
@@ -100,9 +68,9 @@ export const chatService = {
     const instructions = await getInstructions();
     const conversation = conversationRepository.getMessages(conversationId);
 
-    const history = conversation.slice(-MAX_HISTORY_MESSAGES);
+    const history = conversation.slice(-config.chat.maxHistoryMessages);
 
-    const cached = getCachedResponse(prompt);
+    const cached = responseCache.get(getCacheKey(prompt));
     if (cached && history.length === 0) {
       logger.info({ prompt, conversationId }, "Cache hit for prompt");
       sendSSE(res, { chunk: cached });
@@ -113,19 +81,19 @@ export const chatService = {
 
     const payload = buildPayload(instructions, history, prompt);
 
-    const ollamaResponse = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+    const ollamaResponse = await fetch(`${config.ollama.baseUrl}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
+        model: config.ollama.model,
         messages: payload,
         stream: true,
         options: {
-          temperature: OLLAMA_TEMPERATURE,
-          num_predict: OLLAMA_MAX_TOKENS,
+          temperature: config.ollama.temperature,
+          num_predict: config.ollama.maxTokens,
         },
       }),
-      signal: AbortSignal.timeout(OLLAMA_TIMEOUT_MS),
+      signal: AbortSignal.timeout(config.ollama.timeoutMs),
     });
 
     if (!ollamaResponse.ok) {
@@ -192,7 +160,7 @@ export const chatService = {
     ]);
 
     if (fullResponse.trim() && history.length === 0) {
-      setCachedResponse(prompt, fullResponse.trim());
+      responseCache.set(getCacheKey(prompt), fullResponse.trim());
       logger.info({ prompt, conversationId }, "Cached response for prompt");
     }
 

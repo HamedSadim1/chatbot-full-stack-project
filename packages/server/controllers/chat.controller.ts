@@ -9,9 +9,7 @@ const chatSchema = z.object({
     .trim()
     .min(1, "Prompt is required")
     .max(1000, "Prompt is too long (max 1000 characters)"),
-  conversationId: z
-    .string()
-    .regex(/^(\w{8})-(\w{4})-(\w{4})-(\w{4})-(\w{12})$/),
+  conversationId: z.string().uuid(),
 });
 
 export const chatController = {

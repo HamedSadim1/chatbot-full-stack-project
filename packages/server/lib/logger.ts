@@ -1,13 +1,14 @@
 import { AsyncLocalStorage } from "async_hooks";
 import pino from "pino";
+import { config } from "../config";
 
-const isDevelopment = process.env.NODE_ENV !== "production";
-const isPrettyEnabled = isDevelopment || process.env.LOG_PRETTY === "true";
+const isPrettyEnabled =
+  config.nodeEnv === "development" || config.logging.pretty;
 
 const correlationIdStorage = new AsyncLocalStorage<string>();
 
 export const logger = pino({
-  level: process.env.LOG_LEVEL ?? "info",
+  level: config.logging.level,
   mixin: () => {
     const correlationId = correlationIdStorage.getStore();
     return correlationId ? { correlationId } : {};

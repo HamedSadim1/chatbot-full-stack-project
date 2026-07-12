@@ -4,10 +4,12 @@ import router from "./routes";
 import { chatRateLimiter } from "./middleware/rateLimiter";
 import { correlationIdMiddleware } from "./middleware/correlationId";
 import { logger } from "./lib/logger";
+import { config } from "./config";
 
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "10kb" }));
 app.use(correlationIdMiddleware);
 app.use("/api/chat", chatRateLimiter);
@@ -32,8 +34,6 @@ app.use((req, res, next) => {
 
 app.use(router);
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  logger.info({ port: PORT }, "Server started");
+app.listen(config.port, () => {
+  logger.info({ port: config.port }, "Server started");
 });
