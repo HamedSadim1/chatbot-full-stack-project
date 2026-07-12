@@ -14,7 +14,7 @@ export const NAV_LINKS = [
 
 export const API = {
   baseUrl: (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, ""),
-  healthEndpoint: "/hello",
+  healthEndpoint: "/health",
   chatEndpoint: "/chat",
 } as const;
 

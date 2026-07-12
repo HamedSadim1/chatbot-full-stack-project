@@ -3,17 +3,30 @@ export type ConversationMessage = {
   content: string;
 };
 
-// In productie hoort deze state in een gedeelde datastore zoals Redis of PostgreSQL
-const conversations = new Map<string, ConversationMessage[]>();
+export interface ConversationRepository {
+  getMessages(conversationId: string): ConversationMessage[];
+  setMessages(conversationId: string, messages: ConversationMessage[]): void;
+  reset(conversationId: string): void;
+}
 
-export const conversationRepository = {
+const MAX_STORED_MESSAGES = 50;
+
+class InMemoryConversationRepository implements ConversationRepository {
+  private conversations = new Map<string, ConversationMessage[]>();
+
   getMessages(conversationId: string): ConversationMessage[] {
-    return conversations.get(conversationId) ?? [];
-  },
+    return this.conversations.get(conversationId) ?? [];
+  }
+
   setMessages(conversationId: string, messages: ConversationMessage[]) {
-    conversations.set(conversationId, messages);
-  },
+    const trimmed = messages.slice(-MAX_STORED_MESSAGES);
+    this.conversations.set(conversationId, trimmed);
+  }
+
   reset(conversationId: string) {
-    conversations.delete(conversationId);
-  },
-};
+    this.conversations.delete(conversationId);
+  }
+}
+
+export const conversationRepository: ConversationRepository =
+  new InMemoryConversationRepository();

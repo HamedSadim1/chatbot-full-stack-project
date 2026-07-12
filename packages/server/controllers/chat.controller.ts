@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
-import { chatService } from "../services/chat.service";
 import z from "zod";
+import { chatService } from "../services/chat.service";
+import { logger } from "../lib/logger";
 
 const chatSchema = z.object({
   prompt: z
@@ -12,21 +13,31 @@ const chatSchema = z.object({
     .string()
     .regex(/^(\w{8})-(\w{4})-(\w{4})-(\w{4})-(\w{12})$/),
 });
+
 export const chatController = {
   async sendMessage(req: Request, res: Response) {
     const parseResult = chatSchema.safeParse(req.body);
     if (!parseResult.success) {
-      return res.status(400).json({ error: parseResult.error.format });
+      return res.status(400).json({ error: parseResult.error.format() });
     }
 
-    try {
-      const { prompt, conversationId } = parseResult.data;
-      const response = await chatService.sendMessage(prompt, conversationId);
+    const { prompt, conversationId } = parseResult.data;
 
-      res.json({ message: response.message });
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    try {
+      await chatService.sendMessage(prompt, conversationId, res);
     } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      logger.error(error, "Chat request failed");
+      res.write(
+        `data: ${JSON.stringify({
+          error: "Internal Server Error",
+          details: error instanceof Error ? error.message : "Unknown error",
+        })}\n\n`
+      );
+      res.end();
     }
   },
 };

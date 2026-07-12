@@ -9,12 +9,7 @@ import { playAudioSafe, popAudio, notificationAudio } from "@/lib/audio";
 import { apiClient } from "@/lib/api";
 import { API, CHAT, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
-import type {
-  ChatFormData,
-  ChatResponse,
-  ConnectionStatus,
-  Message,
-} from "@/types/chat";
+import type { ChatFormData, ConnectionStatus, Message } from "@/types/chat";
 
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,6 +20,7 @@ const ChatBot = () => {
 
   const conversationId = useRef(crypto.randomUUID()).current;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -62,28 +58,101 @@ const ChatBot = () => {
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
     try {
+      setError("");
+      playAudioSafe(popAudio);
+
       setMessages((prev) => [
         ...prev,
         { role: "user", content: prompt, timestamp: new Date() },
       ]);
       setIsAssistantTyping(true);
-      setError("");
-      playAudioSafe(popAudio);
 
-      const { data } = await apiClient.post<ChatResponse>(API.chatEndpoint, {
-        prompt,
-        conversationId,
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+
+      const response = await fetch(`${API.baseUrl}${API.chatEndpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, conversationId }),
+        signal: abortControllerRef.current.signal,
       });
+
+      if (!response.ok) {
+        const errorData = (await response.json().catch(() => ({}))) as {
+          error?: string;
+        };
+        throw new Error(errorData.error ?? "Failed to send message");
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let currentMessage = "";
+
+      if (!reader) {
+        throw new Error("No response body");
+      }
+
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.message, timestamp: new Date() },
+        { role: "assistant", content: "", timestamp: new Date() },
       ]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk
+          .split("\n")
+          .filter((line) => line.startsWith("data: "));
+
+        for (const line of lines) {
+          const data = JSON.parse(line.slice(6)) as
+            { chunk: string } | { done: true } | { error: string };
+
+          if ("error" in data) {
+            throw new Error(data.error);
+          }
+
+          if ("chunk" in data) {
+            currentMessage += data.chunk;
+            setMessages((prev) => {
+              const lastMessage = prev[prev.length - 1];
+              if (!lastMessage || lastMessage.role !== "assistant") {
+                return prev;
+              }
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                ...lastMessage,
+                content: currentMessage,
+              };
+              return newMessages;
+            });
+          }
+        }
+      }
+
       playAudioSafe(notificationAudio);
     } catch (error) {
       console.error(error);
+      if (error instanceof Error && error.name === "AbortError") {
+        return;
+      }
       setError(NL.chat.errorMessage);
+      setMessages((prev) => {
+        const lastMessage = prev[prev.length - 1];
+        if (
+          lastMessage &&
+          lastMessage.role === "assistant" &&
+          lastMessage.content === ""
+        ) {
+          return prev.slice(0, -1);
+        }
+        return prev;
+      });
     } finally {
       setIsAssistantTyping(false);
+      abortControllerRef.current = null;
     }
   };
 
