@@ -15,7 +15,8 @@
   "scripts": {
     "dev": "bun run index.ts",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "typecheck": "cd packages/client && bunx tsc -b && cd ../server && bunx tsc --noEmit"
   },
   "peerDependencies": {
     "typescript": "^7.0.2"
