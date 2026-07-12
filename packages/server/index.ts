@@ -2,12 +2,14 @@ import dotenv from "dotenv";
 import express from "express";
 import router from "./routes";
 import { chatRateLimiter } from "./middleware/rateLimiter";
+import { correlationIdMiddleware } from "./middleware/correlationId";
 import { logger } from "./lib/logger";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json({ limit: "10kb" }));
+app.use(correlationIdMiddleware);
 app.use("/api/chat", chatRateLimiter);
 
 app.use((req, res, next) => {
