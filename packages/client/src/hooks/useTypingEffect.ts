@@ -16,9 +16,10 @@ export const useTypingEffect = (
   const shouldAnimate = enabled && !prefersReducedMotion();
   const [displayedText, setDisplayedText] = useState(shouldAnimate ? "" : text);
   const indexRef = useRef(0);
+  const completedRef = useRef(false);
 
   useEffect(() => {
-    if (!enabled || indexRef.current >= text.length) {
+    if (!enabled || completedRef.current || indexRef.current >= text.length) {
       return;
     }
 
@@ -27,6 +28,7 @@ export const useTypingEffect = (
       setDisplayedText(text.slice(0, indexRef.current));
 
       if (indexRef.current >= text.length) {
+        completedRef.current = true;
         clearInterval(intervalId);
       }
     }, speed);

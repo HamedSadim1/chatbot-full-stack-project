@@ -9,7 +9,6 @@ import type { Message } from "@/types/chat";
 
 interface ChatMessagesProps {
   messages: Message[];
-  isTyping?: boolean;
 }
 
 const formatTime = (date?: Date) => {
@@ -37,7 +36,7 @@ const AssistantMessageContent = ({
   return <ReactMarkdown>{displayedContent}</ReactMarkdown>;
 };
 
-const ChatMessages = ({ messages, isTyping }: ChatMessagesProps) => {
+const ChatMessages = ({ messages }: ChatMessagesProps) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleCopy = async (text: string, index: number) => {
@@ -114,11 +113,7 @@ const ChatMessages = ({ messages, isTyping }: ChatMessagesProps) => {
                     <AssistantMessageContent
                       key={`assistant-${index}-${msg.timestamp?.getTime() ?? index}-${msg.content.length}`}
                       content={msg.content}
-                      animate={
-                        !isUser &&
-                        index === messages.length - 1 &&
-                        isTyping === true
-                      }
+                      animate={!isUser && index === messages.length - 1}
                     />
                   )}
                 </div>
