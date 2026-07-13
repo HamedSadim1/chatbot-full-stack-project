@@ -8,7 +8,6 @@ export const chatRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests, please try again later." },
-  keyGenerator: (req) => (req.ip ? String(req.ip) : "unknown"),
   handler: (req, res, next, options) => {
     logger.warn({ ip: req.ip, path: req.path }, "Rate limit exceeded");
     res.status(options.statusCode).json(options.message);
