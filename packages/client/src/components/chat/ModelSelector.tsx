@@ -16,6 +16,8 @@ export const ModelSelector = ({
   return (
     <div className="relative">
       <select
+        id="chat-model"
+        name="model"
         value={selected}
         onChange={(e) => onSelect(e.target.value)}
         disabled={disabled}
