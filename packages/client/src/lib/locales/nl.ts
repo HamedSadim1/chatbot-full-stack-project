@@ -20,6 +20,10 @@ export const NL = {
     footerNote: "gebruikt contextuele prompts voor persoonlijkere antwoorden.",
     footerTagline: "Snel & persoonlijk",
     errorMessage: "Er is een fout opgetreden. Probeer het later opnieuw.",
+    ollamaTimeoutError:
+      "De AI-service (Ollama) reageert niet. Start Ollama en zorg dat het juiste model beschikbaar is.",
+    ollamaConnectionError:
+      "Kan geen verbinding maken met Ollama. Controleer of Ollama is gestart.",
     retryLabel: "Opnieuw proberen",
     copyLabel: "Kopieer bericht",
   },

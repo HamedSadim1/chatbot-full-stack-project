@@ -11,6 +11,24 @@ import { API, CHAT, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
 import type { ChatFormData, ConnectionStatus, Message } from "@/types/chat";
 
+const getFriendlyErrorMessage = (error: unknown): string => {
+  if (!(error instanceof Error)) {
+    return NL.chat.errorMessage;
+  }
+
+  const message = error.message.toLowerCase();
+
+  if (message.includes("ollama") && message.includes("timed out")) {
+    return NL.chat.ollamaTimeoutError;
+  }
+
+  if (message.includes("ollama") && message.includes("failed to connect")) {
+    return NL.chat.ollamaConnectionError;
+  }
+
+  return error.message;
+};
+
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
@@ -179,7 +197,8 @@ const ChatBot = () => {
       if (error instanceof Error && error.name === "AbortError") {
         return;
       }
-      setError(error instanceof Error ? error.message : NL.chat.errorMessage);
+      const friendlyError = getFriendlyErrorMessage(error);
+      setError(friendlyError);
       setMessages((prev) => {
         const lastMessage = prev[prev.length - 1];
         if (
