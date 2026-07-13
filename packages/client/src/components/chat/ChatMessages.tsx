@@ -2,12 +2,14 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Check, Copy, User } from "lucide-react";
 import { BotAvatar } from "@/components/ui";
+import { useTypingEffect } from "@/hooks/useTypingEffect";
 import { APP, SITE, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
 import type { Message } from "@/types/chat";
 
 interface ChatMessagesProps {
   messages: Message[];
+  isTyping?: boolean;
 }
 
 const formatTime = (date?: Date) => {
@@ -18,7 +20,24 @@ const formatTime = (date?: Date) => {
   }).format(date);
 };
 
-const ChatMessages = ({ messages }: ChatMessagesProps) => {
+interface AssistantMessageContentProps {
+  content: string;
+  animate: boolean;
+}
+
+const AssistantMessageContent = ({
+  content,
+  animate,
+}: AssistantMessageContentProps) => {
+  const displayedContent = useTypingEffect(content, {
+    speed: 12,
+    enabled: animate,
+  });
+
+  return <ReactMarkdown>{displayedContent}</ReactMarkdown>;
+};
+
+const ChatMessages = ({ messages, isTyping }: ChatMessagesProps) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleCopy = async (text: string, index: number) => {
@@ -89,7 +108,19 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                 }`}
               >
                 <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:rounded-2xl prose-pre:bg-slate-950/80 prose-pre:p-4 prose-code:rounded-md prose-code:bg-slate-950/60 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-cyan-200 prose-a:text-cyan-300 prose-a:no-underline hover:prose-a:underline">
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  {isUser ? (
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  ) : (
+                    <AssistantMessageContent
+                      key={`assistant-${index}-${msg.timestamp?.getTime() ?? index}`}
+                      content={msg.content}
+                      animate={
+                        !isUser &&
+                        index === messages.length - 1 &&
+                        isTyping === true
+                      }
+                    />
+                  )}
                 </div>
 
                 {!isUser && (

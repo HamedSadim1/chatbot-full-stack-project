@@ -261,7 +261,7 @@ const ChatBot = () => {
           ref={scrollContainerRef}
           className="frosted-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-2"
         >
-          <ChatMessages messages={messages} />
+          <ChatMessages messages={messages} isTyping={isAssistantTyping} />
 
           {isAssistantTyping && <TypingIndicator />}
           {error && <ErrorBanner error={error} onRetry={handleRetry} />}
