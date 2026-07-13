@@ -17,7 +17,7 @@ const configSchema = z.object({
     baseUrl: z
       .string()
       .url()
-      .default("http://127.0.0.1:11434")
+      .default("http://localhost:11434")
       .transform(normalizeBaseUrl),
     model: z.string().default("llama3.1"),
     temperature: preprocessNumber(z.number().default(0.2)),

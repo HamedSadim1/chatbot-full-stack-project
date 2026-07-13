@@ -8,7 +8,11 @@ const isPrettyEnabled =
 
 const correlationIdStorage = new AsyncLocalStorage<string>();
 
-const logFilePath = path.join(process.cwd(), "logs", "server.log");
+const logFilePath = path.join(
+  process.cwd(),
+  "logs",
+  `server-${process.pid}.log`
+);
 
 const transport = pino.transport({
   targets: [

@@ -96,7 +96,10 @@ export const chatService = {
     try {
       ollamaResponse = await fetch(`${config.ollama.baseUrl}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Connection: "close",
+        },
         body: JSON.stringify(ollamaBody),
         signal: AbortSignal.timeout(config.ollama.timeoutMs),
       });
