@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "async_hooks";
+import path from "path";
 import pino from "pino";
 import { config } from "../config";
 
@@ -7,23 +8,45 @@ const isPrettyEnabled =
 
 const correlationIdStorage = new AsyncLocalStorage<string>();
 
-export const logger = pino({
-  level: config.logging.level,
-  mixin: () => {
-    const correlationId = correlationIdStorage.getStore();
-    return correlationId ? { correlationId } : {};
-  },
-  transport: isPrettyEnabled
-    ? {
-        target: "pino-pretty",
-        options: {
-          colorize: true,
-          translateTime: "SYS:standard",
-          ignore: "pid,hostname",
-        },
-      }
-    : undefined,
+const logFilePath = path.join(process.cwd(), "logs", "server.log");
+
+const transport = pino.transport({
+  targets: [
+    {
+      target: "pino-pretty",
+      level: config.logging.level,
+      options: {
+        colorize: true,
+        translateTime: "SYS:standard",
+        ignore: "pid,hostname",
+      },
+    },
+    {
+      target: "pino/file",
+      level: config.logging.level,
+      options: {
+        destination: logFilePath,
+        mkdir: true,
+      },
+    },
+  ],
 });
+
+export const logger = pino(
+  {
+    level: config.logging.level,
+    mixin: () => {
+      const correlationId = correlationIdStorage.getStore();
+      return correlationId ? { correlationId } : {};
+    },
+  },
+  isPrettyEnabled
+    ? transport
+    : pino.transport({
+        target: "pino/file",
+        options: { destination: logFilePath, mkdir: true },
+      })
+);
 
 export const runWithCorrelationId = <T>(
   correlationId: string,
