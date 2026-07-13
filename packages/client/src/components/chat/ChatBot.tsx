@@ -20,6 +20,8 @@ const ChatBot = () => {
 
   const conversationId = useRef(crypto.randomUUID()).current;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isNearBottomRef = useRef(true);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -49,14 +51,33 @@ const ChatBot = () => {
   }, []);
 
   useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const threshold = 100;
+      isNearBottomRef.current =
+        container.scrollHeight - container.scrollTop - container.clientHeight <=
+        threshold;
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
-      scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+      if (isNearBottomRef.current) {
+        scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+      }
     }, 50);
 
     return () => clearTimeout(timer);
   }, [messages, isAssistantTyping, error]);
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
+    isNearBottomRef.current = true;
+
     try {
       setError("");
       playAudioSafe(popAudio);
@@ -198,7 +219,10 @@ const ChatBot = () => {
       <ChatHeader status={connectionStatus} />
 
       <section className="glass-panel flex flex-1 flex-col gap-4 rounded-4xl border border-white/10 p-4 sm:p-6">
-        <div className="frosted-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-2">
+        <div
+          ref={scrollContainerRef}
+          className="frosted-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-2"
+        >
           <ChatMessages messages={messages} />
 
           {isAssistantTyping && <TypingIndicator />}
