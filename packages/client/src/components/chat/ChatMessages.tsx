@@ -102,7 +102,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
               <div
                 className={`group relative max-w-2xl rounded-3xl px-5 py-4 text-sm leading-relaxed shadow-lg transition-all ${
                   isUser
-                    ? "bg-linear-to-r from-brand-primary/90 via-brand-secondary/80 to-brand-tertiary/90 text-text-primary shadow-[0_10px_40px_rgba(14,165,233,0.35)]"
+                    ? "bg-linear-to-r from-brand-primary/90 via-brand-secondary/80 to-brand-tertiary/90 text-text-primary shadow-[0_10px_40px_var(--shadow-brand)]"
                     : "glass-panel border-glass-border bg-glass-bg text-text-secondary"
                 }`}
               >

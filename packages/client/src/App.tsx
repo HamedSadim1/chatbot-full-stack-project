@@ -11,41 +11,41 @@ function App() {
       <div className="pointer-events-none absolute -bottom-40 right-0 h-105 w-105 rounded-full bg-brand-tertiary/25 blur-[140px]" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6">
-        <nav className="glass-panel flex flex-col gap-3 rounded-28 border border-white/10 px-5 py-4 text-white sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+        <nav className="glass-panel flex flex-col gap-3 rounded-28 border border-glass-border px-5 py-4 text-text-primary sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="flex items-center gap-3">
             <BotAvatar size="sm" />
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+              <p className="text-xs uppercase tracking-[0.4em] text-text-muted">
                 {SITE.name}
               </p>
               <span className="text-lg font-semibold">{SITE.author}</span>
             </div>
           </div>
-          <div className="hidden items-center gap-4 text-sm text-white/70 sm:flex">
+          <div className="hidden items-center gap-4 text-sm text-text-secondary sm:flex">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="rounded-full px-3 py-1.5 transition hover:bg-white/10 hover:text-white"
+                className="rounded-full px-3 py-1.5 transition hover:bg-glass-bg-active hover:text-text-primary"
               >
                 {link.label}
               </a>
             ))}
             <ExternalLink
               href={SITE.portfolioUrl}
-              className="rounded-full border border-white/20 px-4 py-1.5 text-white transition hover:border-white/60 hover:bg-white/5"
+              className="rounded-full border border-glass-border px-4 py-1.5 text-text-primary transition hover:border-brand-primary/50 hover:bg-glass-bg-active"
             >
               {NL.app.portfolioLabel}
             </ExternalLink>
           </div>
-          <div className="flex items-center justify-between text-sm text-white/70 sm:hidden">
+          <div className="flex items-center justify-between text-sm text-text-secondary sm:hidden">
             <span className="flex items-center gap-2">
               <MessageCircle className="size-4" />
               {NL.app.tagline}
             </span>
             <ExternalLink
               href={SITE.portfolioUrl}
-              className="rounded-full border border-white/20 px-3 py-1 text-white transition hover:border-white/60"
+              className="rounded-full border border-glass-border px-3 py-1 text-text-primary transition hover:border-brand-primary/50"
             >
               {NL.app.portfolioLabel}
             </ExternalLink>
@@ -54,21 +54,23 @@ function App() {
 
         <ChatBot />
 
-        <footer className="glass-panel mt-auto rounded-3xl border border-white/10 px-4 py-4 text-sm text-white/70 sm:flex sm:items-center sm:justify-between">
+        <footer className="glass-panel mt-auto rounded-3xl border border-glass-border px-4 py-4 text-sm text-text-secondary sm:flex sm:items-center sm:justify-between">
           <p>
             {NL.app.madeBy}{" "}
-            <span className="font-semibold text-white">{SITE.author}</span>
+            <span className="font-semibold text-text-primary">
+              {SITE.author}
+            </span>
           </p>
           <div className="mt-2 flex items-center gap-4 sm:mt-0">
             <ExternalLink
-              className="inline-flex items-center gap-2 text-white/80 underline-offset-4 hover:text-white hover:underline"
+              className="inline-flex items-center gap-2 text-text-secondary underline-offset-4 hover:text-text-primary hover:underline"
               href={SITE.portfolioUrl}
             >
               {SITE.portfolioUrl.replace("https://", "")}
             </ExternalLink>
             <ExternalLink
               href={SITE.githubUrl}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-1.5 rounded-full border border-glass-border bg-glass-bg px-3 py-1.5 text-xs text-text-secondary transition hover:border-brand-primary/50 hover:bg-glass-bg-active hover:text-text-primary"
               aria-label={NL.app.githubLabel}
             >
               <ExternalLinkIcon className="size-3.5" />

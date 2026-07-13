@@ -25,6 +25,9 @@
   --color-text-muted: var(--text-muted);
   --color-error: var(--error);
   --color-warning: var(--warning);
+  --color-glow-primary: var(--glow-primary);
+  --color-glow-secondary: var(--glow-secondary);
+  --color-shadow-brand: var(--shadow-brand);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -92,6 +95,11 @@
   --surface: oklch(0.205 0 0);
   --surface-hover: oklch(0.269 0 0);
   --button-text: oklch(0.145 0 0);
+  --glow-primary: oklch(0.696 0.17 227 / 25%);
+  --glow-secondary: oklch(0.627 0.265 303 / 25%);
+  --shadow-brand: oklch(0.696 0.17 227 / 35%);
+  --bg-base-start: oklch(0.08 0.02 260 / 0.9);
+  --bg-base-end: oklch(0.12 0.03 260 / 0.95);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -142,6 +150,11 @@
   --surface: oklch(0.205 0 0);
   --surface-hover: oklch(0.269 0 0);
   --button-text: oklch(0.145 0 0);
+  --glow-primary: oklch(0.75 0.15 227 / 25%);
+  --glow-secondary: oklch(0.7 0.2 300 / 25%);
+  --shadow-brand: oklch(0.75 0.15 227 / 35%);
+  --bg-base-start: oklch(0.08 0.02 260 / 0.9);
+  --bg-base-end: oklch(0.12 0.03 260 / 0.95);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -175,20 +188,20 @@
     background-image:
       radial-gradient(
         circle at top left,
-        rgba(56, 189, 248, 0.25),
+        color-mix(in oklch, var(--brand-primary) 25%, transparent),
         transparent 55%
       ),
       radial-gradient(
         circle at 20% 40%,
-        rgba(167, 139, 250, 0.35),
+        color-mix(in oklch, var(--brand-tertiary) 35%, transparent),
         transparent 60%
       ),
       radial-gradient(
         circle at 80% 0%,
-        rgba(248, 113, 113, 0.2),
+        color-mix(in oklch, var(--brand-secondary) 20%, transparent),
         transparent 55%
       ),
-      linear-gradient(135deg, rgba(2, 6, 23, 0.9), rgba(15, 23, 42, 0.95));
+      linear-gradient(135deg, var(--bg-base-start), var(--bg-base-end));
     color: rgba(241, 245, 249, 0.92);
   }
 
@@ -200,7 +213,7 @@
     z-index: -1;
     background: radial-gradient(
       circle,
-      rgba(14, 165, 233, 0.25) 0%,
+      var(--glow-primary) 0%,
       transparent 60%
     );
     filter: blur(120px);
@@ -212,7 +225,7 @@
   body::after {
     background: radial-gradient(
       circle,
-      rgba(167, 139, 250, 0.25) 0%,
+      var(--glow-secondary) 0%,
       transparent 60%
     );
     transform: translate(20%, 10%) translateZ(0);
@@ -238,14 +251,15 @@
   .frosted-scrollbar::-webkit-scrollbar-thumb {
     background: linear-gradient(
       180deg,
-      rgba(14, 165, 233, 0.6),
-      rgba(99, 102, 241, 0.6)
+      color-mix(in oklch, var(--brand-primary) 60%, transparent),
+      color-mix(in oklch, var(--brand-secondary) 60%, transparent)
     );
     border-radius: 9999px;
   }
 
   .text-glow {
-    text-shadow: 0 8px 30px rgba(15, 118, 110, 0.35);
+    text-shadow: 0 8px 30px
+      color-mix(in oklch, var(--brand-primary) 35%, transparent);
   }
 }
 
