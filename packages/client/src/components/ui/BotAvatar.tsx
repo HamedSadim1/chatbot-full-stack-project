@@ -22,12 +22,12 @@ export const BotAvatar = ({ size = "md", className }: BotAvatarProps) => {
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400/20 to-violet-500/20",
+        "inline-flex items-center justify-center rounded-2xl bg-linear-to-br from-brand-primary/20 to-brand-tertiary/20",
         sizeClasses[size],
         className
       )}
     >
-      <Bot className={cn("text-cyan-200", iconSizes[size])} />
+      <Bot className={cn("text-brand-primary", iconSizes[size])} />
     </span>
   );
 };

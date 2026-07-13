@@ -253,10 +253,10 @@ const ChatBot = () => {
     messages.length === 0 && !isAssistantTyping && !error;
 
   return (
-    <div className="flex min-h-150 flex-col gap-6 text-white">
+    <div className="flex min-h-150 flex-col gap-6 text-text-primary">
       <ChatHeader status={connectionStatus} />
 
-      <section className="glass-panel flex flex-1 flex-col gap-4 rounded-4xl border border-white/10 p-4 sm:p-6">
+      <section className="glass-panel flex flex-1 flex-col gap-4 rounded-4xl border border-glass-border p-4 sm:p-6">
         <div
           ref={scrollContainerRef}
           className="frosted-scrollbar flex flex-1 flex-col gap-4 overflow-y-auto pr-2"

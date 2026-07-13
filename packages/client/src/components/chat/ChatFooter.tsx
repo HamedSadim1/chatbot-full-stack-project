@@ -28,11 +28,11 @@ export const ChatFooter = ({
         selectedModel={selectedModel}
         onModelChange={onModelChange}
       />
-      <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
-        <Sparkles className="size-3.5 text-cyan-200" />
+      <p className="mt-2 flex items-center gap-2 text-xs text-text-muted">
+        <Sparkles className="size-3.5 text-brand-primary" />
         {SITE.botName} {NL.chat.footerNote}
-        <Zap className="ml-auto size-3.5 text-amber-300" />
-        <span className="text-white/40">{NL.chat.footerTagline}</span>
+        <Zap className="ml-auto size-3.5 text-warning" />
+        <span className="text-text-muted/70">{NL.chat.footerTagline}</span>
       </p>
     </div>
   );

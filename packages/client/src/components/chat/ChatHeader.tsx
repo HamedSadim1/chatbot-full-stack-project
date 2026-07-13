@@ -13,7 +13,7 @@ export const ChatHeader = ({ status }: ChatHeaderProps) => {
     <header className="glass-panel rounded-4xl border border-white/10 px-5 py-6 sm:px-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+          <p className="text-xs uppercase tracking-[0.4em] text-text-muted">
             {SITE.name}
           </p>
           <div className="flex items-center gap-3">
@@ -22,7 +22,7 @@ export const ChatHeader = ({ status }: ChatHeaderProps) => {
               <h1 className="text-glow text-2xl font-semibold leading-tight">
                 {NL.chat.title}
               </h1>
-              <p className="text-sm text-white/70">{NL.chat.subtitle}</p>
+              <p className="text-sm text-text-muted">{NL.chat.subtitle}</p>
             </div>
           </div>
         </div>

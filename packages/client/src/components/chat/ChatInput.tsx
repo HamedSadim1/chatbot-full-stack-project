@@ -85,7 +85,7 @@ const ChatInput = ({
   return (
     <form
       onSubmit={handleFormSubmit}
-      className="group relative flex flex-col gap-2 rounded-28 border border-white/10 bg-white/5 px-4 py-3 shadow-lg backdrop-blur-2xl transition focus-within:border-cyan-400/50 focus-within:bg-white/8 focus-within:shadow-[0_0_40px_rgba(14,165,233,0.2)]"
+      className="group relative flex flex-col gap-2 rounded-28 border border-glass-border bg-glass-bg px-4 py-3 shadow-lg backdrop-blur-2xl transition focus-within:border-brand-primary/50 focus-within:bg-glass-bg-active focus-within:shadow-[0_0_40px_rgba(14,165,233,0.2)]"
       aria-label={NL.chat.inputAriaLabel}
     >
       <textarea
@@ -96,7 +96,7 @@ const ChatInput = ({
           ref(element);
           textareaRef.current = element;
         }}
-        className="w-full resize-none border-0 bg-transparent text-base leading-relaxed text-white placeholder-white/50 focus:outline-none focus:ring-0 disabled:opacity-60"
+        className="w-full resize-none border-0 bg-transparent text-base leading-relaxed text-text-primary placeholder-text-muted focus:outline-none focus:ring-0 disabled:opacity-60"
         placeholder={NL.chat.placeholder}
         maxLength={CHAT.maxLength}
         minLength={CHAT.minLength}
@@ -122,7 +122,7 @@ const ChatInput = ({
             disabled={disabled}
           />
           {formState.errors.prompt ? (
-            <span className="text-xs text-red-300">
+            <span className="text-xs text-error">
               {formState.errors.prompt.message}
             </span>
           ) : (
@@ -130,8 +130,8 @@ const ChatInput = ({
               className={`text-xs transition-colors ${
                 characterCount >=
                 CHAT.maxLength * TIMING.characterWarningThreshold
-                  ? "text-amber-300"
-                  : "text-white/40"
+                  ? "text-warning"
+                  : "text-text-muted"
               }`}
             >
               {characterCount}/{CHAT.maxLength}
@@ -143,7 +143,7 @@ const ChatInput = ({
           type="submit"
           disabled={!isValid || disabled}
           aria-label={NL.chat.sendAriaLabel}
-          className="h-10 w-10 rounded-full bg-linear-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_10px_30px_rgba(14,165,233,0.45)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_rgba(14,165,233,0.55)] disabled:opacity-40 disabled:hover:scale-100"
+          className="h-10 w-10 rounded-full bg-linear-to-r from-brand-primary to-brand-secondary text-button-text shadow-[0_10px_30px_rgba(14,165,233,0.45)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_rgba(14,165,233,0.55)] disabled:opacity-40 disabled:hover:scale-100"
         >
           {isLoading ? (
             <Loader2 className="size-5 animate-spin" />

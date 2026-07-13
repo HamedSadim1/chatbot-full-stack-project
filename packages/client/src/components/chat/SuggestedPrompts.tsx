@@ -14,7 +14,7 @@ export const SuggestedPrompts = ({
           key={prompt}
           type="button"
           onClick={() => onSelect(prompt)}
-          className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 transition hover:border-cyan-400/50 hover:bg-white/10 hover:text-white"
+          className="rounded-full border border-glass-border bg-glass-bg px-4 py-2 text-sm text-text-secondary transition hover:border-brand-primary/50 hover:bg-glass-bg-active hover:text-text-primary"
         >
           {prompt}
         </button>
