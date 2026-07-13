@@ -12,7 +12,7 @@ import { config } from "../config";
 
 let instructionsPromise: Promise<string> | null = null;
 
-interface OllamaStreamChunk {
+interface OllamaResponse {
   message?: {
     role?: string;
     content?: string;
@@ -81,20 +81,22 @@ export const chatService = {
 
     const payload = buildPayload(instructions, history, prompt);
 
+    const ollamaBody = {
+      model: config.ollama.model,
+      messages: payload,
+      stream: false,
+      options: {
+        temperature: config.ollama.temperature,
+        num_predict: config.ollama.maxTokens,
+      },
+    };
+
     let ollamaResponse: globalThis.Response;
     try {
       ollamaResponse = await fetch(`${config.ollama.baseUrl}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: config.ollama.model,
-          messages: payload,
-          stream: true,
-          options: {
-            temperature: config.ollama.temperature,
-            num_predict: config.ollama.maxTokens,
-          },
-        }),
+        body: JSON.stringify(ollamaBody),
         signal: AbortSignal.timeout(config.ollama.timeoutMs),
       });
     } catch (error) {
@@ -117,68 +119,19 @@ export const chatService = {
       throw error;
     }
 
-    const reader = ollamaResponse.body?.getReader();
-    const decoder = new TextDecoder();
     let fullResponse = "";
-    let lineBuffer = "";
-
-    if (!reader) {
-      throw new Error("Ollama response body is empty");
-    }
-
     try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        lineBuffer += decoder.decode(value, { stream: true });
-        const lines = lineBuffer.split("\n");
-        lineBuffer = lines.pop() ?? "";
-
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed) continue;
-
-          let data: OllamaStreamChunk;
-          try {
-            data = JSON.parse(trimmed) as OllamaStreamChunk;
-          } catch (parseError) {
-            logger.warn(
-              { line: trimmed, parseError },
-              "Failed to parse SSE line from Ollama"
-            );
-            continue;
-          }
-
-          const content = data.message?.content ?? "";
-          if (content) {
-            fullResponse += content;
-            sendSSE(res, { chunk: content });
-          }
-        }
+      const data = (await ollamaResponse.json()) as OllamaResponse;
+      const content = data.message?.content ?? "";
+      fullResponse = content;
+      if (content) {
+        sendSSE(res, { chunk: content });
       }
-
-      if (lineBuffer.trim()) {
-        let data: OllamaStreamChunk;
-        try {
-          data = JSON.parse(lineBuffer.trim()) as OllamaStreamChunk;
-        } catch (parseError) {
-          logger.warn(
-            { line: lineBuffer.trim(), parseError },
-            "Failed to parse final SSE line from Ollama"
-          );
-          sendSSE(res, { error: "Failed to parse Ollama response" });
-          res.end();
-          return;
-        }
-        const content = data.message?.content ?? "";
-        if (content) {
-          fullResponse += content;
-          sendSSE(res, { chunk: content });
-        }
-      }
-    } finally {
-      reader.releaseLock();
+    } catch (parseError) {
+      logger.warn({ parseError }, "Failed to parse Ollama response");
+      sendSSE(res, { error: "Failed to parse Ollama response" });
+      res.end();
+      return;
     }
 
     const assistantMessage: ConversationMessage = {
