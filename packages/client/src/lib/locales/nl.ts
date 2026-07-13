@@ -40,5 +40,7 @@ export const NL = {
     onlineDescription: "Realtime verbinding actief",
     offline: "Offline",
     offlineDescription: "Geen verbinding met server",
+    ollamaOffline: "Ollama offline",
+    ollamaOfflineDescription: "AI-service niet bereikbaar",
   },
 } as const;

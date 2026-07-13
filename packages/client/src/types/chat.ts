@@ -12,4 +12,5 @@ export type ChatResponse = {
   message: string;
 };
 
-export type ConnectionStatus = "checking" | "online" | "offline";
+export type ConnectionStatus =
+  "checking" | "online" | "offline" | "ollama-offline";

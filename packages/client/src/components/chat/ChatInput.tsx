@@ -9,9 +9,14 @@ import type { ChatFormData } from "@/types/chat";
 type Props = {
   onSubmit: (data: ChatFormData) => Promise<void>;
   isLoading?: boolean;
+  disabled?: boolean;
 };
 
-const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
+const ChatInput = ({
+  onSubmit,
+  isLoading = false,
+  disabled = false,
+}: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const {
     register,
@@ -89,7 +94,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
         maxLength={CHAT.maxLength}
         minLength={CHAT.minLength}
         rows={1}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         aria-invalid={formState.errors.prompt ? "true" : "false"}
         onChange={(e) => {
           setValue("prompt", e.target.value, { shouldValidate: true });
@@ -120,7 +125,7 @@ const ChatInput = ({ onSubmit, isLoading = false }: Props) => {
 
         <Button
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid || disabled}
           aria-label={NL.chat.sendAriaLabel}
           className="h-10 w-10 rounded-full bg-linear-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_10px_30px_rgba(14,165,233,0.45)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_rgba(14,165,233,0.55)] disabled:opacity-40 disabled:hover:scale-100"
         >

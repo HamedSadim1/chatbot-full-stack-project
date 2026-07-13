@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Wifi, WifiOff } from "lucide-react";
+import { Wifi, WifiOff, AlertCircle } from "lucide-react";
 import { NL } from "@/lib/locales/nl";
 import type { ConnectionStatus } from "@/types/chat";
 
@@ -32,6 +32,13 @@ const statusConfig: Record<ConnectionStatus, StatusConfig> = {
     bg: "bg-red-400/20",
     label: NL.connection.offline,
     description: NL.connection.offlineDescription,
+  },
+  "ollama-offline": {
+    icon: AlertCircle,
+    color: "text-amber-300",
+    bg: "bg-amber-400/20",
+    label: NL.connection.ollamaOffline,
+    description: NL.connection.ollamaOfflineDescription,
   },
 };
 

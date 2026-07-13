@@ -7,12 +7,21 @@ import type { ChatFormData } from "@/types/chat";
 type ChatFooterProps = {
   onSubmit: (data: ChatFormData) => Promise<void>;
   isLoading: boolean;
+  disabled?: boolean;
 };
 
-export const ChatFooter = ({ onSubmit, isLoading }: ChatFooterProps) => {
+export const ChatFooter = ({
+  onSubmit,
+  isLoading,
+  disabled,
+}: ChatFooterProps) => {
   return (
     <div className="pt-1">
-      <ChatInput onSubmit={onSubmit} isLoading={isLoading} />
+      <ChatInput
+        onSubmit={onSubmit}
+        isLoading={isLoading}
+        disabled={disabled}
+      />
       <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
         <Sparkles className="size-3.5 text-cyan-200" />
         {SITE.botName} {NL.chat.footerNote}

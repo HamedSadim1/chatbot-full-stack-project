@@ -6,6 +6,7 @@ import { ErrorBanner } from "./ErrorBanner";
 import { SuggestedPrompts } from "./SuggestedPrompts";
 import { ChatFooter } from "./ChatFooter";
 import { playAudioSafe, popAudio, notificationAudio } from "@/lib/audio";
+import type { AxiosError } from "axios";
 import { apiClient } from "@/lib/api";
 import { API, CHAT, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
@@ -48,12 +49,29 @@ const ChatBot = () => {
 
     const checkConnection = async () => {
       try {
-        await apiClient.get(API.healthEndpoint, {
+        const { data } = await apiClient.get<{
+          status: string;
+          ollama?: string;
+        }>(API.healthEndpoint, {
           timeout: TIMING.healthCheckTimeout,
         });
-        if (!cancelled) setConnectionStatus("online");
-      } catch {
-        if (!cancelled) setConnectionStatus("offline");
+        if (cancelled) return;
+
+        if (data.status === "UP" && data.ollama === "reachable") {
+          setConnectionStatus("online");
+        } else {
+          setConnectionStatus("offline");
+        }
+      } catch (error) {
+        if (cancelled) return;
+
+        const axiosError = error as AxiosError<{ ollama?: string }>;
+        const ollamaStatus = axiosError.response?.data?.ollama;
+        if (ollamaStatus === "unreachable") {
+          setConnectionStatus("ollama-offline");
+        } else {
+          setConnectionStatus("offline");
+        }
       } finally {
         if (!cancelled) {
           timer = setTimeout(checkConnection, TIMING.healthCheckInterval);
@@ -255,7 +273,11 @@ const ChatBot = () => {
           )}
           <div ref={scrollAnchorRef} className="h-px w-full shrink-0" />
         </div>
-        <ChatFooter onSubmit={onSubmit} isLoading={isAssistantTyping} />
+        <ChatFooter
+          onSubmit={onSubmit}
+          isLoading={isAssistantTyping}
+          disabled={connectionStatus === "ollama-offline"}
+        />
       </section>
     </div>
   );
