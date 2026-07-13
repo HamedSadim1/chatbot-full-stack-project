@@ -31,7 +31,7 @@ export const CHAT = {
     { value: "llama3.1", label: "llama3.1" },
     { value: "gemma3:4b", label: "gemma3:4b" },
   ],
-  defaultModel: "llama3.1",
+  defaultModel: "tinyllama",
 } as const;
 
 export const TIMING = {

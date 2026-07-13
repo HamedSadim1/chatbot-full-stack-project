@@ -19,7 +19,7 @@ const configSchema = z.object({
       .url()
       .default("http://localhost:11434")
       .transform(normalizeBaseUrl),
-    model: z.string().default("llama3.1"),
+    model: z.string().default("tinyllama"),
     temperature: preprocessNumber(z.number().default(0.2)),
     maxTokens: preprocessNumber(z.number().int().positive().default(256)),
     timeoutMs: preprocessNumber(z.number().int().positive().default(120000)),
