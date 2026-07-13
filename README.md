@@ -2,7 +2,7 @@
 
 ![Screenshot](public/screenshot.png)
 
-AI-powered WonderWorld chat assistant built with a Vite + React client and an Express + Bun server that talks to a local [Ollama](https://ollama.com) model. The UI embraces glassmorphism, typing audio, markdown messages, a navbar, and footer crediting **Hamed Sadim**.
+WonderWorld Chat is an AI-powered assistant for WonderWorld Park visitors. It pairs a polished Vite + React frontend with an Express + Bun backend that streams answers from a local [Ollama](https://ollama.com) LLM. The UI features glassmorphism panels, markdown message rendering, typing audio feedback, and persistent conversation memory.
 
 ## Table of contents
 
@@ -18,9 +18,9 @@ AI-powered WonderWorld chat assistant built with a Vite + React client and an Ex
 
 ## Project overview
 
-- **Goal**: Provide a chat experience for WonderWorld visitors, backed by curated prompts (`packages/server/prompts`) and a local LLM via Ollama.
-- **Stack**: Bun runtime, Express, Vite, React, TypeScript, Tailwind utilities, `react-hook-form`, `react-markdown`, and Lucide icons.
-- **Highlights**: Neon gradients, glass panels, navbar/footer, markdown answers, audio feedback, and conversation memory by `conversationId`.
+- **Goal**: Give WonderWorld Park visitors a friendly, AI-driven chat experience powered by curated prompts (`packages/server/prompts`) and a local LLM via Ollama.
+- **Stack**: Bun runtime, Express, Vite, React, TypeScript, Tailwind CSS v4, `react-hook-form`, `react-markdown`, and Lucide icons.
+- **Highlights**: Streaming responses, neon gradients, glass panels, responsive navbar/footer, markdown answers, typing audio feedback, and conversation memory keyed by `conversationId`.
 
 ## Repository layout
 
