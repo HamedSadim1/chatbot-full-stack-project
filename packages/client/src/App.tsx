@@ -7,8 +7,12 @@ import { NL } from "./lib/locales/nl";
 function App() {
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden px-4 py-6 sm:py-12">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute -left-1/4 -top-1/4 h-[60vh] w-[60vw] rounded-full bg-brand-primary/8 blur-[100px]" />
+        <div className="absolute -bottom-1/4 -right-1/4 h-[60vh] w-[60vw] rounded-full bg-brand-primary/5 blur-[100px]" />
+      </div>
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6">
-        <nav className="glass-panel flex flex-col gap-3 rounded-28 border border-glass-border px-5 py-4 text-text-primary sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+        <nav className="glass-panel glass-blur flex flex-col gap-3 rounded-28 border border-glass-border px-5 py-4 text-text-primary sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="flex items-center gap-3">
             <BotAvatar size="sm" />
             <div>
@@ -51,7 +55,7 @@ function App() {
 
         <ChatBot />
 
-        <footer className="glass-panel mt-auto rounded-3xl border border-glass-border px-4 py-4 text-sm text-text-secondary sm:flex sm:items-center sm:justify-between">
+        <footer className="glass-panel glass-blur mt-auto rounded-3xl border border-glass-border px-4 py-4 text-sm text-text-secondary sm:flex sm:items-center sm:justify-between">
           <p>
             {NL.app.madeBy}{" "}
             <span className="font-semibold text-text-primary">

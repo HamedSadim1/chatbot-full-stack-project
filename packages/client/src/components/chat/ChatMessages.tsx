@@ -100,10 +100,10 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
               </div>
 
               <div
-                className={`group relative max-w-2xl rounded-3xl px-5 py-4 text-sm leading-relaxed shadow-lg transition-all ${
+                className={`group relative max-w-2xl rounded-3xl px-5 py-4 text-sm leading-relaxed transition-colors ${
                   isUser
-                    ? "bg-brand-primary text-button-text"
-                    : "glass-panel border-glass-border bg-glass-bg text-text-secondary"
+                    ? "bg-brand-primary text-button-text shadow-[0_8px_24px_var(--shadow-brand)]"
+                    : "glass-bubble border-glass-border bg-glass-bg text-text-secondary hover:bg-glass-bg-active"
                 }`}
               >
                 <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:rounded-2xl prose-pre:bg-surface/80 prose-pre:p-4 prose-code:rounded-md prose-code:bg-surface/60 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-brand-primary prose-a:text-brand-primary prose-a:no-underline hover:prose-a:underline">
@@ -122,7 +122,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                   <button
                     type="button"
                     onClick={() => handleCopy(msg.content, index)}
-                    className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full border border-glass-border bg-surface/80 text-text-primary/70 opacity-0 transition hover:bg-surface-hover hover:text-text-primary group-hover:opacity-100"
+                    className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-text-primary/70 opacity-0 shadow-md transition-all hover:scale-110 hover:bg-glass-bg-active hover:text-text-primary group-hover:opacity-100"
                     aria-label={NL.chat.copyLabel}
                     title={NL.chat.copyLabel}
                   >

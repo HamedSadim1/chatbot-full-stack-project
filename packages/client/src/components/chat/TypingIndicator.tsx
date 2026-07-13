@@ -3,7 +3,7 @@ import { NL } from "@/lib/locales/nl";
 const TypingIndicator = () => {
   return (
     <div
-      className="inline-flex items-center gap-3 self-start rounded-2xl border border-glass-border bg-glass-bg px-4 py-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
+      className="inline-flex items-center gap-3 self-start rounded-2xl border border-glass-border bg-glass-bg/80 px-4 py-3 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300"
       aria-label={NL.chat.typingAriaLabel}
     >
       <span className="text-xs font-medium uppercase tracking-wider text-text-muted">

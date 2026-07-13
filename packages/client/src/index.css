@@ -76,9 +76,9 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --brand-primary: oklch(0.696 0.17 227);
-  --glass-bg: oklch(0.2 0 0 / 25%);
-  --glass-bg-active: oklch(0.22 0 0 / 35%);
-  --glass-border: oklch(1 0 0 / 10%);
+  --glass-bg: oklch(1 0 0 / 8%);
+  --glass-bg-active: oklch(1 0 0 / 14%);
+  --glass-border: oklch(1 0 0 / 16%);
   --text-primary: oklch(0.985 0 0);
   --text-secondary: oklch(0.92 0 0 / 92%);
   --text-muted: oklch(1 0 0 / 60%);
@@ -125,9 +125,9 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
   --brand-primary: oklch(0.75 0.15 227);
-  --glass-bg: oklch(0.18 0 0 / 25%);
-  --glass-bg-active: oklch(0.2 0 0 / 35%);
-  --glass-border: oklch(1 0 0 / 10%);
+  --glass-bg: oklch(1 0 0 / 10%);
+  --glass-bg-active: oklch(1 0 0 / 18%);
+  --glass-border: oklch(1 0 0 / 20%);
   --text-primary: oklch(0.985 0 0);
   --text-secondary: oklch(0.92 0 0 / 92%);
   --text-muted: oklch(1 0 0 / 60%);
@@ -176,7 +176,16 @@
 
 @layer utilities {
   .glass-panel {
-    @apply bg-glass-bg border border-glass-border shadow-[0_20px_80px_rgba(15,23,42,0.45)];
+    @apply bg-glass-bg border border-glass-border shadow-[0_8px_32px_rgba(2,8,23,0.4)];
+    transform: translateZ(0);
+  }
+
+  .glass-blur {
+    @apply backdrop-blur-md;
+  }
+
+  .glass-bubble {
+    @apply bg-glass-bg border border-glass-border shadow-[0_4px_16px_rgba(2,8,23,0.25)];
     transform: translateZ(0);
   }
 
@@ -210,19 +219,4 @@
     transform: translateY(-4px);
     opacity: 1;
   }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.4s ease-out forwards;
 }
