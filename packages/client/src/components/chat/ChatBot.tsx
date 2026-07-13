@@ -39,10 +39,10 @@ const ChatBot = () => {
   const [selectedModel, setSelectedModel] = useState<string>(CHAT.defaultModel);
 
   const conversationId = useRef(crypto.randomUUID()).current;
-  const scrollAnchorRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isNearBottomRef = useRef(true);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const scrollFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -103,13 +103,30 @@ const ChatBot = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isNearBottomRef.current) {
-        scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 50);
+    const scrollToBottom = () => {
+      scrollFrameRef.current = null;
+      if (!isNearBottomRef.current) return;
 
-    return () => clearTimeout(timer);
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: isAssistantTyping ? "auto" : "smooth",
+      });
+    };
+
+    if (scrollFrameRef.current !== null) {
+      cancelAnimationFrame(scrollFrameRef.current);
+    }
+
+    scrollFrameRef.current = requestAnimationFrame(scrollToBottom);
+
+    return () => {
+      if (scrollFrameRef.current !== null) {
+        cancelAnimationFrame(scrollFrameRef.current);
+      }
+    };
   }, [messages, isAssistantTyping, error]);
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
@@ -272,7 +289,7 @@ const ChatBot = () => {
               onSelect={handleSuggestedPrompt}
             />
           )}
-          <div ref={scrollAnchorRef} className="h-px w-full shrink-0" />
+          <div className="h-px w-full shrink-0" />
         </div>
         <ChatFooter
           onSubmit={onSubmit}

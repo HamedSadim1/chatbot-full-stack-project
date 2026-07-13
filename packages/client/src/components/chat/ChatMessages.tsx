@@ -74,7 +74,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
         return (
           <div
             key={messageKey}
-            className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""} animate-in fade-in slide-in-from-bottom-2 duration-300 will-change-transform`}
+            className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""} animate-in fade-in slide-in-from-bottom-2 duration-300`}
           >
             <div
               className={`flex size-9 shrink-0 items-center justify-center rounded-2xl backdrop-blur ${
@@ -111,7 +111,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   ) : (
                     <AssistantMessageContent
-                      key={`assistant-${index}-${msg.timestamp?.getTime() ?? index}-${msg.content.length}`}
+                      key={`assistant-${index}-${msg.timestamp?.getTime() ?? index}`}
                       content={msg.content}
                       animate={!isUser && index === messages.length - 1}
                     />
