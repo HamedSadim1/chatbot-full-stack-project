@@ -81,20 +81,32 @@ export const chatService = {
 
     const payload = buildPayload(instructions, history, prompt);
 
-    const ollamaResponse = await fetch(`${config.ollama.baseUrl}/api/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: config.ollama.model,
-        messages: payload,
-        stream: true,
-        options: {
-          temperature: config.ollama.temperature,
-          num_predict: config.ollama.maxTokens,
-        },
-      }),
-      signal: AbortSignal.timeout(config.ollama.timeoutMs),
-    });
+    let ollamaResponse: globalThis.Response;
+    try {
+      ollamaResponse = await fetch(`${config.ollama.baseUrl}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: config.ollama.model,
+          messages: payload,
+          stream: true,
+          options: {
+            temperature: config.ollama.temperature,
+            num_predict: config.ollama.maxTokens,
+          },
+        }),
+        signal: AbortSignal.timeout(config.ollama.timeoutMs),
+      });
+    } catch (error) {
+      const isTimeout =
+        (error instanceof DOMException && error.name === "TimeoutError") ||
+        (error instanceof Error && error.name === "TimeoutError");
+      const message = isTimeout
+        ? `Ollama timed out after ${config.ollama.timeoutMs}ms at ${config.ollama.baseUrl}. Make sure Ollama is running and the model "${config.ollama.model}" is available.`
+        : `Failed to connect to Ollama at ${config.ollama.baseUrl}. Make sure Ollama is running.`;
+      logger.error({ error, baseUrl: config.ollama.baseUrl }, message);
+      throw new Error(message);
+    }
 
     if (!ollamaResponse.ok) {
       const errorText = await ollamaResponse.text();
