@@ -16,8 +16,6 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-brand-primary: var(--brand-primary);
-  --color-brand-secondary: var(--brand-secondary);
-  --color-brand-tertiary: var(--brand-tertiary);
   --color-glass-bg: var(--glass-bg);
   --color-glass-border: var(--glass-border);
   --color-text-primary: var(--text-primary);
@@ -25,8 +23,6 @@
   --color-text-muted: var(--text-muted);
   --color-error: var(--error);
   --color-warning: var(--warning);
-  --color-glow-primary: var(--glow-primary);
-  --color-glow-secondary: var(--glow-secondary);
   --color-shadow-brand: var(--shadow-brand);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -80,8 +76,6 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --brand-primary: oklch(0.696 0.17 227);
-  --brand-secondary: oklch(0.646 0.222 260);
-  --brand-tertiary: oklch(0.627 0.265 303);
   --glass-bg: oklch(1 0 0 / 5%);
   --glass-bg-active: oklch(1 0 0 / 8%);
   --glass-border: oklch(1 0 0 / 10%);
@@ -95,11 +89,7 @@
   --surface: oklch(0.205 0 0);
   --surface-hover: oklch(0.269 0 0);
   --button-text: oklch(0.145 0 0);
-  --glow-primary: oklch(0.696 0.17 227 / 25%);
-  --glow-secondary: oklch(0.627 0.265 303 / 25%);
   --shadow-brand: oklch(0.696 0.17 227 / 35%);
-  --bg-base-start: oklch(0.08 0.02 260 / 0.9);
-  --bg-base-end: oklch(0.12 0.03 260 / 0.95);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -135,8 +125,6 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
   --brand-primary: oklch(0.75 0.15 227);
-  --brand-secondary: oklch(0.7 0.2 260);
-  --brand-tertiary: oklch(0.7 0.2 300);
   --glass-bg: oklch(1 0 0 / 5%);
   --glass-bg-active: oklch(1 0 0 / 8%);
   --glass-border: oklch(1 0 0 / 10%);
@@ -150,11 +138,7 @@
   --surface: oklch(0.205 0 0);
   --surface-hover: oklch(0.269 0 0);
   --button-text: oklch(0.145 0 0);
-  --glow-primary: oklch(0.75 0.15 227 / 25%);
-  --glow-secondary: oklch(0.7 0.2 300 / 25%);
   --shadow-brand: oklch(0.75 0.15 227 / 35%);
-  --bg-base-start: oklch(0.08 0.02 260 / 0.9);
-  --bg-base-end: oklch(0.12 0.03 260 / 0.95);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -185,51 +169,8 @@
       BlinkMacSystemFont,
       "Segoe UI",
       sans-serif;
-    background-image:
-      radial-gradient(
-        circle at top left,
-        color-mix(in oklch, var(--brand-primary) 25%, transparent),
-        transparent 55%
-      ),
-      radial-gradient(
-        circle at 20% 40%,
-        color-mix(in oklch, var(--brand-tertiary) 35%, transparent),
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 80% 0%,
-        color-mix(in oklch, var(--brand-secondary) 20%, transparent),
-        transparent 55%
-      ),
-      linear-gradient(135deg, var(--bg-base-start), var(--bg-base-end));
-    color: rgba(241, 245, 249, 0.92);
-  }
-
-  body::before,
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(
-      circle,
-      var(--glow-primary) 0%,
-      transparent 60%
-    );
-    filter: blur(120px);
-    opacity: 0.7;
-    will-change: transform, filter;
-    transform: translateZ(0);
-  }
-
-  body::after {
-    background: radial-gradient(
-      circle,
-      var(--glow-secondary) 0%,
-      transparent 60%
-    );
-    transform: translate(20%, 10%) translateZ(0);
-    opacity: 0.5;
+    background-color: var(--background);
+    color: var(--text-secondary);
   }
 }
 
@@ -249,11 +190,7 @@
   }
 
   .frosted-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      180deg,
-      color-mix(in oklch, var(--brand-primary) 60%, transparent),
-      color-mix(in oklch, var(--brand-secondary) 60%, transparent)
-    );
+    background: color-mix(in oklch, var(--brand-primary) 60%, transparent);
     border-radius: 9999px;
   }
 

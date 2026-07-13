@@ -26,7 +26,7 @@ type DotProps = {
 
 const Dot = ({ delay }: DotProps) => (
   <div
-    className="size-2 rounded-full bg-linear-to-r from-brand-primary to-brand-tertiary"
+    className="size-2 rounded-full bg-brand-primary"
     style={{
       animation: "typing-bounce 1.2s ease-in-out infinite",
       animationDelay: delay,

@@ -143,7 +143,7 @@ const ChatInput = ({
           type="submit"
           disabled={!isValid || disabled}
           aria-label={NL.chat.sendAriaLabel}
-          className="h-10 w-10 rounded-full bg-linear-to-r from-brand-primary to-brand-secondary text-button-text shadow-[0_10px_30px_var(--shadow-brand)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_var(--shadow-brand)] disabled:opacity-40 disabled:hover:scale-100"
+          className="h-10 w-10 rounded-full bg-brand-primary text-button-text shadow-[0_10px_30px_var(--shadow-brand)] transition-all hover:scale-105 hover:shadow-[0_10px_40px_var(--shadow-brand)] disabled:opacity-40 disabled:hover:scale-100"
         >
           {isLoading ? (
             <Loader2 className="size-5 animate-spin" />
