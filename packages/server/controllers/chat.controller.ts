@@ -29,14 +29,22 @@ export const chatController = {
     try {
       await chatService.sendMessage(prompt, conversationId, res, model);
     } catch (error) {
-      logger.error(error, "Chat request failed");
-      res.write(
-        `data: ${JSON.stringify({
-          error: "Internal Server Error",
-          details: error instanceof Error ? error.message : "Unknown error",
-        })}\n\n`
+      logger.error(
+        { error, promptLength: prompt.length, conversationId, model },
+        "Chat request failed"
       );
-      res.end();
+      const details = error instanceof Error ? error.message : "Unknown error";
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Internal Server Error", details });
+      } else {
+        res.write(
+          `data: ${JSON.stringify({
+            error: "Internal Server Error",
+            details,
+          })}\n\n`
+        );
+        res.end();
+      }
     }
   },
 };
