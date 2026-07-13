@@ -26,6 +26,8 @@ export const NL = {
       "Kan geen verbinding maken met Ollama. Controleer of Ollama is gestart.",
     retryLabel: "Opnieuw proberen",
     copyLabel: "Kopieer bericht",
+    modelSelectorLabel: "Selecteer model",
+    modelListLabel: "Beschikbare modellen",
   },
   validation: {
     required: "Typ eerst een bericht.",
