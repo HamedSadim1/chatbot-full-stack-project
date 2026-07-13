@@ -158,7 +158,7 @@ const ChatBot = () => {
       if (error instanceof Error && error.name === "AbortError") {
         return;
       }
-      setError(NL.chat.errorMessage);
+      setError(error instanceof Error ? error.message : NL.chat.errorMessage);
       setMessages((prev) => {
         const lastMessage = prev[prev.length - 1];
         if (

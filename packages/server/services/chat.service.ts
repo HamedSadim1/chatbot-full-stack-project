@@ -139,7 +139,17 @@ export const chatService = {
           const trimmed = line.trim();
           if (!trimmed) continue;
 
-          const data = JSON.parse(trimmed) as OllamaStreamChunk;
+          let data: OllamaStreamChunk;
+          try {
+            data = JSON.parse(trimmed) as OllamaStreamChunk;
+          } catch (parseError) {
+            logger.warn(
+              { line: trimmed, parseError },
+              "Failed to parse SSE line from Ollama"
+            );
+            continue;
+          }
+
           const content = data.message?.content ?? "";
           if (content) {
             fullResponse += content;
@@ -149,7 +159,18 @@ export const chatService = {
       }
 
       if (lineBuffer.trim()) {
-        const data = JSON.parse(lineBuffer.trim()) as OllamaStreamChunk;
+        let data: OllamaStreamChunk;
+        try {
+          data = JSON.parse(lineBuffer.trim()) as OllamaStreamChunk;
+        } catch (parseError) {
+          logger.warn(
+            { line: lineBuffer.trim(), parseError },
+            "Failed to parse final SSE line from Ollama"
+          );
+          sendSSE(res, { error: "Failed to parse Ollama response" });
+          res.end();
+          return;
+        }
         const content = data.message?.content ?? "";
         if (content) {
           fullResponse += content;
