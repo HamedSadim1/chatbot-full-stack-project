@@ -20,8 +20,14 @@ export const NL = {
     footerNote: "gebruikt contextuele prompts voor persoonlijkere antwoorden.",
     footerTagline: "Snel & persoonlijk",
     errorMessage: "Er is een fout opgetreden. Probeer het later opnieuw.",
+    ollamaTimeoutError:
+      "De AI-service (Ollama) reageert niet. Start Ollama en zorg dat het juiste model beschikbaar is.",
+    ollamaConnectionError:
+      "Kan geen verbinding maken met Ollama. Controleer of Ollama is gestart.",
     retryLabel: "Opnieuw proberen",
     copyLabel: "Kopieer bericht",
+    modelSelectorLabel: "Selecteer model",
+    modelListLabel: "Beschikbare modellen",
   },
   validation: {
     required: "Typ eerst een bericht.",
@@ -36,5 +42,7 @@ export const NL = {
     onlineDescription: "Realtime verbinding actief",
     offline: "Offline",
     offlineDescription: "Geen verbinding met server",
+    ollamaOffline: "Ollama offline",
+    ollamaOfflineDescription: "AI-service niet bereikbaar",
   },
 } as const;

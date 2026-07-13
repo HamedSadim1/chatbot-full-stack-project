@@ -7,17 +7,32 @@ import type { ChatFormData } from "@/types/chat";
 type ChatFooterProps = {
   onSubmit: (data: ChatFormData) => Promise<void>;
   isLoading: boolean;
+  disabled?: boolean;
+  selectedModel?: string;
+  onModelChange?: (model: string) => void;
 };
 
-export const ChatFooter = ({ onSubmit, isLoading }: ChatFooterProps) => {
+export const ChatFooter = ({
+  onSubmit,
+  isLoading,
+  disabled,
+  selectedModel,
+  onModelChange,
+}: ChatFooterProps) => {
   return (
     <div className="pt-1">
-      <ChatInput onSubmit={onSubmit} isLoading={isLoading} />
-      <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
-        <Sparkles className="size-3.5 text-cyan-200" />
+      <ChatInput
+        onSubmit={onSubmit}
+        isLoading={isLoading}
+        disabled={disabled}
+        selectedModel={selectedModel}
+        onModelChange={onModelChange}
+      />
+      <p className="mt-2 flex items-center gap-2 text-xs text-text-muted">
+        <Sparkles className="size-3.5 text-brand-primary" />
         {SITE.botName} {NL.chat.footerNote}
-        <Zap className="ml-auto size-3.5 text-amber-300" />
-        <span className="text-white/40">{NL.chat.footerTagline}</span>
+        <Zap className="ml-auto size-3.5 text-warning" />
+        <span className="text-text-dimmed">{NL.chat.footerTagline}</span>
       </p>
     </div>
   );

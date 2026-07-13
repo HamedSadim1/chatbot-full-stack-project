@@ -6,10 +6,12 @@ export type Message = {
 
 export type ChatFormData = {
   prompt: string;
+  model: string;
 };
 
 export type ChatResponse = {
   message: string;
 };
 
-export type ConnectionStatus = "checking" | "online" | "offline";
+export type ConnectionStatus =
+  "checking" | "online" | "offline" | "ollama-offline";

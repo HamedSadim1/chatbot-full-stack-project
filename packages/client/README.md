@@ -1,4 +1,4 @@
-# WonderChat client
+# WonderWorld Chat client
 
 React + Vite front-end for the WonderWorld chatbot.
 

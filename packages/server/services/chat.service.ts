@@ -1,96 +1,160 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
+import { LRUCache } from "lru-cache";
+import type { Response } from "express";
 import {
   conversationRepository,
   type ConversationMessage,
 } from "../repositories/conversation.repository";
 import template from "../prompts/chatbox.txt";
+import { logger } from "../lib/logger";
+import { config } from "../config";
 
-const parkInfo = fs.readFileSync(
-  path.join(__dirname, "..", "prompts", "WonderWord.md"),
-  "utf-8"
-);
+let instructionsPromise: Promise<string> | null = null;
 
-const instructions = template.replace("{{parkInfo}}", parkInfo);
+interface OllamaResponse {
+  message?: {
+    role?: string;
+    content?: string;
+  };
+  done?: boolean;
+  error?: string;
+}
 
-const OLLAMA_BASE_URL = (
-  process.env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434"
-).replace(/\/$/, "");
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "llama3.1";
+const responseCache = new LRUCache<string, string>({
+  max: config.chat.maxCacheEntries,
+  ttl: config.chat.cacheTtlMs,
+  updateAgeOnGet: true,
+});
 
-const toNumber = (value: string | undefined, fallback: number) => {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
+const buildInstructions = async (): Promise<string> => {
+  const parkInfo = await fs.readFile(
+    path.join(__dirname, "..", "prompts", "WonderWord.md"),
+    "utf-8"
+  );
+  return template.replace("{{parkInfo}}", parkInfo);
 };
 
-const OLLAMA_TEMPERATURE = toNumber(process.env.OLLAMA_TEMPERATURE, 0.2);
-const OLLAMA_MAX_TOKENS = toNumber(process.env.OLLAMA_MAX_TOKENS, 256);
+const getInstructions = (): Promise<string> => {
+  if (!instructionsPromise) {
+    instructionsPromise = buildInstructions();
+  }
+  return instructionsPromise;
+};
 
-interface OllamaChatResponse {
-  message: {
-    role: "assistant";
-    content: string;
-  };
-  done: boolean;
-}
+const getCacheKey = (prompt: string) => prompt.trim().toLowerCase();
 
-interface ChatResponse {
-  message: string;
-}
+const sendSSE = (res: Response, data: unknown) => {
+  res.write(`data: ${JSON.stringify(data)}\n\n`);
+  (res as Response & { flush?: () => void }).flush?.();
+};
+
+const buildPayload = (
+  instructions: string,
+  history: ConversationMessage[],
+  prompt: string
+): ConversationMessage[] => [
+  { role: "system", content: instructions },
+  ...history,
+  { role: "user", content: prompt },
+];
+
 export const chatService = {
   async sendMessage(
     prompt: string,
-    conversationId: string
-  ): Promise<ChatResponse> {
+    conversationId: string,
+    res: Response,
+    model?: string
+  ): Promise<void> {
+    const instructions = await getInstructions();
     const conversation = conversationRepository.getMessages(conversationId);
-    const hasSystem = conversation.some((msg) => msg.role === "system");
 
-    const history: ConversationMessage[] = hasSystem
-      ? [...conversation]
-      : [{ role: "system", content: instructions }, ...conversation];
+    const history = conversation.slice(-config.chat.maxHistoryMessages);
 
-    const payload: ConversationMessage[] = [
-      ...history,
-      { role: "user", content: prompt },
-    ];
-
-    const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        messages: payload,
-        stream: false,
-        options: {
-          temperature: OLLAMA_TEMPERATURE,
-          num_predict: OLLAMA_MAX_TOKENS,
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Ollama request failed (${response.status} ${response.statusText}): ${errorText}`
-      );
+    const cached = responseCache.get(getCacheKey(prompt));
+    if (cached && history.length === 0) {
+      logger.info({ prompt, conversationId }, "Cache hit for prompt");
+      sendSSE(res, { chunk: cached });
+      sendSSE(res, { done: true });
+      res.end();
+      return;
     }
 
-    const data = (await response.json()) as OllamaChatResponse;
+    const payload = buildPayload(instructions, history, prompt);
 
-    if (!data?.message?.content) {
-      throw new Error("Ollama response did not contain a message");
+    const ollamaBody = {
+      model: model ?? config.ollama.model,
+      messages: payload,
+      stream: false,
+      options: {
+        temperature: config.ollama.temperature,
+        num_predict: config.ollama.maxTokens,
+      },
+    };
+
+    let ollamaResponse: globalThis.Response;
+    try {
+      ollamaResponse = await fetch(`${config.ollama.baseUrl}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Connection: "close",
+        },
+        body: JSON.stringify(ollamaBody),
+        signal: AbortSignal.timeout(config.ollama.timeoutMs),
+      });
+    } catch (error) {
+      const isTimeout =
+        (error instanceof DOMException && error.name === "TimeoutError") ||
+        (error instanceof Error && error.name === "TimeoutError");
+      const message = isTimeout
+        ? `Ollama timed out after ${config.ollama.timeoutMs}ms at ${config.ollama.baseUrl}. Make sure Ollama is running and the model "${config.ollama.model}" is available.`
+        : `Failed to connect to Ollama at ${config.ollama.baseUrl}. Make sure Ollama is running.`;
+      logger.error({ error, baseUrl: config.ollama.baseUrl }, message);
+      throw new Error(message);
+    }
+
+    if (!ollamaResponse.ok) {
+      const errorText = await ollamaResponse.text();
+      const error = new Error(
+        `Ollama request failed (${ollamaResponse.status} ${ollamaResponse.statusText}): ${errorText}`
+      );
+      logger.error(error, "Ollama request failed");
+      throw error;
+    }
+
+    let fullResponse = "";
+    try {
+      const data = (await ollamaResponse.json()) as OllamaResponse;
+      const content = data.message?.content ?? "";
+      fullResponse = content;
+      if (content) {
+        sendSSE(res, { chunk: content });
+      }
+    } catch (parseError) {
+      logger.warn({ parseError }, "Failed to parse Ollama response");
+      sendSSE(res, { error: "Failed to parse Ollama response" });
+      res.end();
+      return;
     }
 
     const assistantMessage: ConversationMessage = {
       role: "assistant",
-      content: data.message.content.trim(),
+      content: fullResponse.trim(),
     };
 
     conversationRepository.setMessages(conversationId, [
-      ...payload,
+      ...history,
+      { role: "user", content: prompt },
       assistantMessage,
     ]);
 
-    return { message: assistantMessage.content };
+    if (fullResponse.trim() && history.length === 0) {
+      responseCache.set(getCacheKey(prompt), fullResponse.trim());
+      logger.info({ prompt, conversationId }, "Cached response for prompt");
+    }
+
+    sendSSE(res, { done: true });
+    res.end();
   },
 };

@@ -1,15 +1,39 @@
 import dotenv from "dotenv";
 import express from "express";
 import router from "./routes";
+import { chatRateLimiter } from "./middleware/rateLimiter";
+import { correlationIdMiddleware } from "./middleware/correlationId";
+import { logger } from "./lib/logger";
+import { config } from "./config";
 
 dotenv.config();
-// shift + ctrl + l to select all same words
+
 const app = express();
-app.use(express.json());
+app.set("trust proxy", 1);
+app.use(express.json({ limit: "10kb" }));
+app.use(correlationIdMiddleware);
+app.use("/api/chat", chatRateLimiter);
+
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    logger.info(
+      {
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode,
+        durationMs: duration,
+        userAgent: req.get("user-agent"),
+      },
+      "request completed"
+    );
+  });
+  next();
+});
+
 app.use(router);
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(config.port, () => {
+  logger.info({ port: config.port }, "Server started");
 });

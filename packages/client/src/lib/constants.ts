@@ -1,5 +1,5 @@
 export const SITE = {
-  name: "WonderChat",
+  name: "WonderWorld Chat",
   botName: "WonderWord",
   author: "Hamed Sadim",
   portfolioUrl: "https://hamedsadim-portfolio.vercel.app",
@@ -14,7 +14,7 @@ export const NAV_LINKS = [
 
 export const API = {
   baseUrl: (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, ""),
-  healthEndpoint: "/hello",
+  healthEndpoint: "/health",
   chatEndpoint: "/chat",
 } as const;
 
@@ -26,6 +26,12 @@ export const CHAT = {
     "Vertel me iets interessants over AI.",
     "Help me met een creatief idee.",
   ],
+  models: [
+    { value: "tinyllama", label: "tinyllama" },
+    { value: "llama3.1", label: "llama3.1" },
+    { value: "gemma3:4b", label: "gemma3:4b" },
+  ],
+  defaultModel: "tinyllama",
 } as const;
 
 export const TIMING = {

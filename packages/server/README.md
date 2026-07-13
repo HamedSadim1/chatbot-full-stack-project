@@ -1,4 +1,4 @@
-# server
+# WonderWorld Chat server
 
 To install dependencies:
 
