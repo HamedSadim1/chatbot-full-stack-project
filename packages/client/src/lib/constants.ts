@@ -1,5 +1,5 @@
 export const SITE = {
-  name: "WonderChat",
+  name: "WonderWorld Chat",
   botName: "WonderWord",
   author: "Hamed Sadim",
   portfolioUrl: "https://hamedsadim-portfolio.vercel.app",
