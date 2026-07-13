@@ -112,7 +112,7 @@ const ChatMessages = ({ messages, isTyping }: ChatMessagesProps) => {
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   ) : (
                     <AssistantMessageContent
-                      key={`assistant-${index}-${msg.timestamp?.getTime() ?? index}`}
+                      key={`assistant-${index}-${msg.timestamp?.getTime() ?? index}-${msg.content.length}`}
                       content={msg.content}
                       animate={
                         !isUser &&

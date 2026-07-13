@@ -11,24 +11,14 @@ const prefersReducedMotion = () =>
 
 export const useTypingEffect = (
   text: string,
-  { speed = 12, enabled = true }: UseTypingEffectOptions = {}
+  { speed = 20, enabled = true }: UseTypingEffectOptions = {}
 ) => {
   const shouldAnimate = enabled && !prefersReducedMotion();
   const [displayedText, setDisplayedText] = useState(shouldAnimate ? "" : text);
   const indexRef = useRef(0);
-  const textRef = useRef(text);
 
   useEffect(() => {
-    if (!shouldAnimate) {
-      return;
-    }
-
-    if (textRef.current !== text) {
-      textRef.current = text;
-      indexRef.current = 0;
-    }
-
-    if (indexRef.current >= text.length) {
+    if (!enabled || indexRef.current >= text.length) {
       return;
     }
 
@@ -42,7 +32,8 @@ export const useTypingEffect = (
     }, speed);
 
     return () => clearInterval(intervalId);
-  }, [text, speed, shouldAnimate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, speed]);
 
   return displayedText;
 };
