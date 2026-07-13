@@ -90,6 +90,8 @@ const ChatInput = ({
     >
       <textarea
         {...rest}
+        id="chat-prompt"
+        name="prompt"
         ref={(element) => {
           ref(element);
           textareaRef.current = element;
