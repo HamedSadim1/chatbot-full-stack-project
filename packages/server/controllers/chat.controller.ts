@@ -10,6 +10,7 @@ const chatSchema = z.object({
     .min(1, "Prompt is required")
     .max(1000, "Prompt is too long (max 1000 characters)"),
   conversationId: z.string().uuid(),
+  model: z.string().min(1).optional(),
 });
 
 export const chatController = {
@@ -19,14 +20,14 @@ export const chatController = {
       return res.status(400).json({ error: parseResult.error.format() });
     }
 
-    const { prompt, conversationId } = parseResult.data;
+    const { prompt, conversationId, model } = parseResult.data;
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
 
     try {
-      await chatService.sendMessage(prompt, conversationId, res);
+      await chatService.sendMessage(prompt, conversationId, res, model);
     } catch (error) {
       logger.error(error, "Chat request failed");
       res.write(

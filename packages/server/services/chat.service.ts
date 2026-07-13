@@ -63,7 +63,8 @@ export const chatService = {
   async sendMessage(
     prompt: string,
     conversationId: string,
-    res: Response
+    res: Response,
+    model?: string
   ): Promise<void> {
     const instructions = await getInstructions();
     const conversation = conversationRepository.getMessages(conversationId);
@@ -82,7 +83,7 @@ export const chatService = {
     const payload = buildPayload(instructions, history, prompt);
 
     const ollamaBody = {
-      model: config.ollama.model,
+      model: model ?? config.ollama.model,
       messages: payload,
       stream: false,
       options: {

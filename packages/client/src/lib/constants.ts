@@ -26,6 +26,12 @@ export const CHAT = {
     "Vertel me iets interessants over AI.",
     "Help me met een creatief idee.",
   ],
+  models: [
+    { value: "tinyllama", label: "tinyllama" },
+    { value: "llama3.1", label: "llama3.1" },
+    { value: "gemma3:4b", label: "gemma3:4b" },
+  ],
+  defaultModel: "llama3.1",
 } as const;
 
 export const TIMING = {

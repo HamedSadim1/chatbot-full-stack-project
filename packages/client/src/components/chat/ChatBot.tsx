@@ -36,6 +36,7 @@ const ChatBot = () => {
   const [error, setError] = useState<string>("");
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("checking");
+  const [selectedModel, setSelectedModel] = useState<string>(CHAT.defaultModel);
 
   const conversationId = useRef(crypto.randomUUID()).current;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -130,7 +131,7 @@ const ChatBot = () => {
       const response = await fetch(`${API.baseUrl}${API.chatEndpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, conversationId }),
+        body: JSON.stringify({ prompt, conversationId, model: selectedModel }),
         signal: abortControllerRef.current.signal,
       });
 
@@ -240,12 +241,12 @@ const ChatBot = () => {
       .reverse()
       .find((msg) => msg.role === "user");
     if (lastUserMessage) {
-      void onSubmit({ prompt: lastUserMessage.content });
+      void onSubmit({ prompt: lastUserMessage.content, model: selectedModel });
     }
   };
 
   const handleSuggestedPrompt = (prompt: string) => {
-    void onSubmit({ prompt });
+    void onSubmit({ prompt, model: selectedModel });
   };
 
   const showSuggestedPrompts =
@@ -277,6 +278,8 @@ const ChatBot = () => {
           onSubmit={onSubmit}
           isLoading={isAssistantTyping}
           disabled={connectionStatus === "ollama-offline"}
+          selectedModel={selectedModel}
+          onModelChange={setSelectedModel}
         />
       </section>
     </div>

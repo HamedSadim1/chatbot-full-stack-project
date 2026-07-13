@@ -6,6 +6,7 @@ export type Message = {
 
 export type ChatFormData = {
   prompt: string;
+  model: string;
 };
 
 export type ChatResponse = {

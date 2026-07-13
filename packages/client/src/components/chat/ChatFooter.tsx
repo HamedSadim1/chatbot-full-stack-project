@@ -8,12 +8,16 @@ type ChatFooterProps = {
   onSubmit: (data: ChatFormData) => Promise<void>;
   isLoading: boolean;
   disabled?: boolean;
+  selectedModel?: string;
+  onModelChange?: (model: string) => void;
 };
 
 export const ChatFooter = ({
   onSubmit,
   isLoading,
   disabled,
+  selectedModel,
+  onModelChange,
 }: ChatFooterProps) => {
   return (
     <div className="pt-1">
@@ -21,6 +25,8 @@ export const ChatFooter = ({
         onSubmit={onSubmit}
         isLoading={isLoading}
         disabled={disabled}
+        selectedModel={selectedModel}
+        onModelChange={onModelChange}
       />
       <p className="mt-2 flex items-center gap-2 text-xs text-white/60">
         <Sparkles className="size-3.5 text-cyan-200" />

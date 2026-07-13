@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { ArrowUp, Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "../ui";
+import { ModelSelector } from "./ModelSelector";
 import { CHAT, TIMING } from "@/lib/constants";
 import { NL } from "@/lib/locales/nl";
 import type { ChatFormData } from "@/types/chat";
@@ -10,12 +11,16 @@ type Props = {
   onSubmit: (data: ChatFormData) => Promise<void>;
   isLoading?: boolean;
   disabled?: boolean;
+  selectedModel?: string;
+  onModelChange?: (model: string) => void;
 };
 
 const ChatInput = ({
   onSubmit,
   isLoading = false,
   disabled = false,
+  selectedModel = CHAT.defaultModel,
+  onModelChange,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const {
@@ -28,7 +33,7 @@ const ChatInput = ({
     control,
   } = useForm<ChatFormData>({
     mode: "onChange",
-    defaultValues: { prompt: "" },
+    defaultValues: { prompt: "", model: selectedModel },
   });
 
   const promptValue = useWatch({ control, name: "prompt", defaultValue: "" });
@@ -50,7 +55,7 @@ const ChatInput = ({
 
   const handleFormSubmit = handleSubmit(async (data: ChatFormData) => {
     if (isLoading) return;
-    reset({ prompt: "" });
+    reset({ prompt: "", model: selectedModel });
     await onSubmit(data);
   });
 
@@ -105,6 +110,15 @@ const ChatInput = ({
 
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-h-5 items-center gap-2">
+          <ModelSelector
+            models={CHAT.models}
+            selected={selectedModel}
+            onSelect={(model) => {
+              onModelChange?.(model);
+              setValue("model", model);
+            }}
+            disabled={disabled}
+          />
           {formState.errors.prompt ? (
             <span className="text-xs text-red-300">
               {formState.errors.prompt.message}
