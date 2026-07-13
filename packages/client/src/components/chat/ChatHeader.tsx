@@ -17,9 +17,9 @@ export const ChatHeader = ({ status }: ChatHeaderProps) => {
             {SITE.name}
           </p>
           <div className="flex items-center gap-3">
-            <BotAvatar size="md" className="backdrop-blur" />
+            <BotAvatar size="md" />
             <div>
-              <h1 className="text-glow text-2xl font-semibold leading-tight">
+              <h1 className="text-2xl font-semibold leading-tight">
                 {NL.chat.title}
               </h1>
               <p className="text-sm text-text-muted">{NL.chat.subtitle}</p>

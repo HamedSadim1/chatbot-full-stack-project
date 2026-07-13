@@ -74,10 +74,10 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
         return (
           <div
             key={messageKey}
-            className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+            className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}
           >
             <div
-              className={`flex size-9 shrink-0 items-center justify-center rounded-2xl backdrop-blur ${
+              className={`flex size-9 shrink-0 items-center justify-center rounded-2xl ${
                 isUser
                   ? "bg-brand-primary text-button-text"
                   : "bg-glass-bg text-brand-primary"
@@ -102,7 +102,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
               <div
                 className={`group relative max-w-2xl rounded-3xl px-5 py-4 text-sm leading-relaxed shadow-lg transition-all ${
                   isUser
-                    ? "bg-brand-primary text-button-text shadow-[0_10px_40px_var(--shadow-brand)]"
+                    ? "bg-brand-primary text-button-text"
                     : "glass-panel border-glass-border bg-glass-bg text-text-secondary"
                 }`}
               >
@@ -122,7 +122,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                   <button
                     type="button"
                     onClick={() => handleCopy(msg.content, index)}
-                    className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full border border-glass-border bg-surface/80 text-text-primary/70 opacity-0 shadow-lg backdrop-blur transition hover:bg-surface-hover hover:text-text-primary group-hover:opacity-100"
+                    className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full border border-glass-border bg-surface/80 text-text-primary/70 opacity-0 transition hover:bg-surface-hover hover:text-text-primary group-hover:opacity-100"
                     aria-label={NL.chat.copyLabel}
                     title={NL.chat.copyLabel}
                   >

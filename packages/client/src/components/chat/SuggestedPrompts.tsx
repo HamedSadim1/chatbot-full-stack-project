@@ -8,7 +8,7 @@ export const SuggestedPrompts = ({
   onSelect,
 }: SuggestedPromptsProps) => {
   return (
-    <div className="flex flex-wrap gap-2 pt-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="flex flex-wrap gap-2 pt-2">
       {prompts.map((prompt) => (
         <button
           key={prompt}
