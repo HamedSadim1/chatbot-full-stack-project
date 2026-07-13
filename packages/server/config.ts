@@ -22,7 +22,7 @@ const configSchema = z.object({
     model: z.string().default("llama3.1"),
     temperature: preprocessNumber(z.number().default(0.2)),
     maxTokens: preprocessNumber(z.number().int().positive().default(256)),
-    timeoutMs: preprocessNumber(z.number().int().positive().default(30000)),
+    timeoutMs: preprocessNumber(z.number().int().positive().default(120000)),
   }),
 
   chat: z.object({
