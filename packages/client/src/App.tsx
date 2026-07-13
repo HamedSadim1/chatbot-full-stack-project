@@ -8,8 +8,8 @@ function App() {
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden px-4 py-6 sm:py-12">
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -left-1/4 -top-1/4 h-[60vh] w-[60vw] rounded-full bg-brand-primary/8 blur-[100px]" />
-        <div className="absolute -bottom-1/4 -right-1/4 h-[60vh] w-[60vw] rounded-full bg-brand-primary/5 blur-[100px]" />
+        <div className="absolute -left-1/4 -top-1/4 h-[60vh] w-[60vw] rounded-full bg-glow-primary blur-[100px]" />
+        <div className="absolute -bottom-1/4 -right-1/4 h-[60vh] w-[60vw] rounded-full bg-glow-secondary blur-[100px]" />
       </div>
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6">
         <nav className="glass-panel glass-blur flex flex-col gap-3 rounded-28 border border-glass-border px-5 py-4 text-text-primary sm:flex-row sm:items-center sm:justify-between sm:gap-0">
@@ -34,7 +34,7 @@ function App() {
             ))}
             <ExternalLink
               href={SITE.portfolioUrl}
-              className="rounded-full border border-glass-border px-4 py-1.5 text-text-primary transition hover:border-brand-primary/50 hover:bg-glass-bg-active"
+              className="rounded-full border border-glass-border px-4 py-1.5 text-text-primary transition hover:border-focus hover:bg-glass-bg-active"
             >
               {NL.app.portfolioLabel}
             </ExternalLink>
@@ -46,7 +46,7 @@ function App() {
             </span>
             <ExternalLink
               href={SITE.portfolioUrl}
-              className="rounded-full border border-glass-border px-3 py-1 text-text-primary transition hover:border-brand-primary/50"
+              className="rounded-full border border-glass-border px-3 py-1 text-text-primary transition hover:border-focus"
             >
               {NL.app.portfolioLabel}
             </ExternalLink>
@@ -71,7 +71,7 @@ function App() {
             </ExternalLink>
             <ExternalLink
               href={SITE.githubUrl}
-              className="inline-flex items-center gap-1.5 rounded-full border border-glass-border bg-glass-bg px-3 py-1.5 text-xs text-text-secondary transition hover:border-brand-primary/50 hover:bg-glass-bg-active hover:text-text-primary"
+              className="inline-flex items-center gap-1.5 rounded-full border border-glass-border bg-glass-bg px-3 py-1.5 text-xs text-text-secondary transition hover:border-focus hover:bg-glass-bg-active hover:text-text-primary"
               aria-label={NL.app.githubLabel}
             >
               <ExternalLinkIcon className="size-3.5" />

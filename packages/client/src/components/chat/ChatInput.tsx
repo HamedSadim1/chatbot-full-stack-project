@@ -85,7 +85,7 @@ const ChatInput = ({
   return (
     <form
       onSubmit={handleFormSubmit}
-      className="group relative flex flex-col gap-2 rounded-28 border border-glass-border bg-glass-bg/80 px-4 py-3 shadow-lg transition focus-within:border-brand-primary/50 focus-within:bg-glass-bg-active focus-within:shadow-[0_0_40px_var(--shadow-brand)]"
+      className="group relative flex flex-col gap-2 rounded-28 border border-glass-border bg-glass-bg px-4 py-3 shadow-lg transition focus-within:border-focus focus-within:bg-glass-bg-active focus-within:shadow-[0_0_40px_var(--shadow-brand)]"
       aria-label={NL.chat.inputAriaLabel}
     >
       <textarea

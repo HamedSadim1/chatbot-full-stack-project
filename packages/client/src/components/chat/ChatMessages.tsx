@@ -94,7 +94,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                 <span className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
                   {isUser ? NL.chat.userLabel : SITE.botName}
                 </span>
-                <span className="text-[10px] text-text-muted/70">
+                <span className="text-[10px] text-text-dimmed">
                   {formatTime(msg.timestamp)}
                 </span>
               </div>
@@ -106,7 +106,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                     : "glass-bubble border-glass-border bg-glass-bg text-text-secondary hover:bg-glass-bg-active"
                 }`}
               >
-                <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:rounded-2xl prose-pre:bg-surface/80 prose-pre:p-4 prose-code:rounded-md prose-code:bg-surface/60 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-brand-primary prose-a:text-brand-primary prose-a:no-underline hover:prose-a:underline">
+                <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:rounded-2xl prose-pre:bg-surface-muted prose-pre:p-4 prose-code:rounded-md prose-code:bg-surface-subtle prose-code:px-1.5 prose-code:py-0.5 prose-code:text-brand-primary prose-a:text-brand-primary prose-a:no-underline hover:prose-a:underline">
                   {isUser ? (
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   ) : (
@@ -122,7 +122,7 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
                   <button
                     type="button"
                     onClick={() => handleCopy(msg.content, index)}
-                    className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-text-primary/70 opacity-0 shadow-md transition-all hover:scale-110 hover:bg-glass-bg-active hover:text-text-primary group-hover:opacity-100"
+                    className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-text-soft opacity-0 shadow-md transition-all hover:scale-110 hover:bg-glass-bg-active hover:text-text-primary group-hover:opacity-100"
                     aria-label={NL.chat.copyLabel}
                     title={NL.chat.copyLabel}
                   >

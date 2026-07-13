@@ -21,7 +21,7 @@ export const ModelSelector = ({
         value={selected}
         onChange={(e) => onSelect(e.target.value)}
         disabled={disabled}
-        className="appearance-none rounded-full border border-glass-border bg-glass-bg px-3 py-1.5 pr-8 text-sm text-text-secondary outline-none transition hover:bg-glass-bg-active focus:border-brand-primary/50 disabled:opacity-50"
+        className="appearance-none rounded-full border border-glass-border bg-glass-bg px-3 py-1.5 pr-8 text-sm text-text-secondary outline-none transition hover:bg-glass-bg-active focus:border-focus disabled:opacity-50"
       >
         {models.map((model) => (
           <option

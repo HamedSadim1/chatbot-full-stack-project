@@ -32,7 +32,7 @@ export const ChatFooter = ({
         <Sparkles className="size-3.5 text-brand-primary" />
         {SITE.botName} {NL.chat.footerNote}
         <Zap className="ml-auto size-3.5 text-warning" />
-        <span className="text-text-muted/70">{NL.chat.footerTagline}</span>
+        <span className="text-text-dimmed">{NL.chat.footerTagline}</span>
       </p>
     </div>
   );

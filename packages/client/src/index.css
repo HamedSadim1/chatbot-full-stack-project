@@ -21,9 +21,26 @@
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
+  --color-text-dimmed: var(--text-dimmed);
+  --color-text-soft: var(--text-soft);
   --color-error: var(--error);
   --color-warning: var(--warning);
   --color-shadow-brand: var(--shadow-brand);
+  --color-shadow-glass: var(--shadow-glass);
+  --color-error-surface: var(--error-surface);
+  --color-error-border: var(--error-border);
+  --color-error-button: var(--error-button);
+  --color-error-hover: var(--error-hover);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-focus-border: var(--focus-border);
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-ring: var(--brand-ring);
+  --color-glow-primary: var(--glow-primary);
+  --color-glow-secondary: var(--glow-secondary);
+  --color-status-success-bg: var(--status-success-bg);
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-error-bg: var(--status-error-bg);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -82,6 +99,8 @@
   --text-primary: oklch(0.985 0 0);
   --text-secondary: oklch(0.92 0 0 / 92%);
   --text-muted: oklch(1 0 0 / 60%);
+  --text-dimmed: oklch(1 0 0 / 70%);
+  --text-soft: oklch(0.985 0 0 / 70%);
   --error: oklch(0.704 0.191 22.216);
   --error-foreground: oklch(0.985 0 0);
   --warning: oklch(0.75 0.15 80);
@@ -90,6 +109,21 @@
   --surface-hover: oklch(0.269 0 0);
   --button-text: oklch(0.145 0 0);
   --shadow-brand: oklch(0.696 0.17 227 / 35%);
+  --shadow-glass: oklch(0.145 0 0 / 25%);
+  --error-surface: oklch(0.704 0.191 22.216 / 20%);
+  --error-border: oklch(0.704 0.191 22.216 / 40%);
+  --error-button: oklch(0.704 0.191 22.216 / 30%);
+  --error-hover: oklch(0.704 0.191 22.216 / 40%);
+  --surface-muted: oklch(0.205 0 0 / 80%);
+  --surface-subtle: oklch(0.205 0 0 / 60%);
+  --focus-border: oklch(0.696 0.17 227 / 50%);
+  --brand-bg: oklch(0.696 0.17 227 / 20%);
+  --brand-ring: oklch(0.696 0.17 227 / 30%);
+  --glow-primary: oklch(0.696 0.17 227 / 8%);
+  --glow-secondary: oklch(0.696 0.17 227 / 5%);
+  --status-success-bg: oklch(0.696 0.17 162.48 / 20%);
+  --status-warning-bg: oklch(0.75 0.15 80 / 20%);
+  --status-error-bg: oklch(0.704 0.191 22.216 / 20%);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -131,6 +165,8 @@
   --text-primary: oklch(0.985 0 0);
   --text-secondary: oklch(0.92 0 0 / 92%);
   --text-muted: oklch(1 0 0 / 60%);
+  --text-dimmed: oklch(1 0 0 / 70%);
+  --text-soft: oklch(0.985 0 0 / 70%);
   --error: oklch(0.704 0.191 22.216);
   --error-foreground: oklch(0.985 0 0);
   --warning: oklch(0.75 0.15 80);
@@ -139,6 +175,21 @@
   --surface-hover: oklch(0.269 0 0);
   --button-text: oklch(0.145 0 0);
   --shadow-brand: oklch(0.75 0.15 227 / 35%);
+  --shadow-glass: oklch(0.145 0 0 / 35%);
+  --error-surface: oklch(0.704 0.191 22.216 / 20%);
+  --error-border: oklch(0.704 0.191 22.216 / 40%);
+  --error-button: oklch(0.704 0.191 22.216 / 30%);
+  --error-hover: oklch(0.704 0.191 22.216 / 40%);
+  --surface-muted: oklch(0.205 0 0 / 80%);
+  --surface-subtle: oklch(0.205 0 0 / 60%);
+  --focus-border: oklch(0.75 0.15 227 / 50%);
+  --brand-bg: oklch(0.75 0.15 227 / 20%);
+  --brand-ring: oklch(0.75 0.15 227 / 30%);
+  --glow-primary: oklch(0.75 0.15 227 / 8%);
+  --glow-secondary: oklch(0.75 0.15 227 / 5%);
+  --status-success-bg: oklch(0.696 0.17 162.48 / 20%);
+  --status-warning-bg: oklch(0.75 0.15 80 / 20%);
+  --status-error-bg: oklch(0.704 0.191 22.216 / 20%);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -180,7 +231,8 @@
 
 @layer utilities {
   .glass-panel {
-    @apply bg-glass-bg border border-glass-border shadow-[0_8px_32px_rgba(2,8,23,0.4)];
+    @apply bg-glass-bg border border-glass-border;
+    box-shadow: 0 8px 32px var(--shadow-glass);
     transform: translateZ(0);
   }
 
@@ -189,7 +241,8 @@
   }
 
   .glass-bubble {
-    @apply bg-glass-bg border border-glass-border shadow-[0_4px_16px_rgba(2,8,23,0.25)];
+    @apply bg-glass-bg border border-glass-border;
+    box-shadow: 0 4px 16px var(--shadow-glass);
     transform: translateZ(0);
   }
 
